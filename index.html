@@ -89,6 +89,13 @@
 </head>
 
 <body>
+<div id="loginPopup" class="modal" style="display: flex;">
+  <div class="modal-box">
+    <h3>Inserisci password</h3>
+    <input id="loginPwInput" type="password" placeholder="Password">
+    <button onclick="confermaLogin()">Accedi</button>
+  </div>
+</div>
 
 <h1>Abbonamento Crocette</h1>
 <p id="totCrocetteText">Crocette totali: 0</p>
@@ -112,7 +119,7 @@
     <h3>Prenota Lezione</h3>
     <input id="nomeInput" type="text" placeholder="Inserisci qui il tuo Nome">
     <input id="emailInput" type="email" placeholder="Inserisci qui la tua Email">
-    <input id="dateInput" type="text" placeholder="Inserisci le date da te desiderate (es: 20/04, 25/04)">
+    <input id="dateInput" type="text" placeholder="Inserisci le date da te desiderate">
     <p style="font-size: 16px; color: #666; margin-top: 10px;">L'invio aprirà la tua app email.</p>
     <button onclick="inviaPrenotazione()" style="background-color: #28a745;">Conferma dati</button>
     <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
@@ -220,6 +227,15 @@ function inviaPrenotazione() {
   alert("Email composta con successo! Clicca ok per ultimare la richiesta.");
 }
 
+function confermaLogin() {
+  const pw = document.getElementById("loginPwInput").value.trim();
+
+  if (pw === "Stagione2026") {
+    document.getElementById("loginPopup").style.display = "none";
+  } else {
+    alert("Password errata!");
+  }
+}
 aggiornaBarra();
 </script>
 
