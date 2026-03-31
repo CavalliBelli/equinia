@@ -127,6 +127,17 @@
 </div>
 
 <script>
+
+function confermaLogin() {
+  const pw = document.getElementById("loginPwInput").value.trim();
+
+  if (pw === "Stagione2026") {
+    document.getElementById("loginPopup").style.display = "none";
+  } else {
+    alert("Password errata!");
+  }
+}
+  
 // --- LOGICA GESTIONE CROCETTE ---
 let totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
 
@@ -225,16 +236,6 @@ function inviaPrenotazione() {
 
   chiudiPopupPrenotazione();
   alert("Email composta con successo! Clicca ok per ultimare la richiesta.");
-}
-
-function confermaLogin() {
-  const pw = document.getElementById("loginPwInput").value.trim();
-
-  if (pw === "Stagione2026") {
-    document.getElementById("loginPopup").style.display = "none";
-  } else {
-    alert("Password errata!");
-  }
 }
 aggiornaBarra();
 </script>
