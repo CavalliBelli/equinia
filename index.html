@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Equinia</title>
+
+<!-- Manifest incorporato -->
+<link rel="manifest" href='data:application/json,{
+  "name": "Equinia",
+  "short_name": "Equinia",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e90ff",
+  "icons": [
+    {
+      "src": "data:image/png;base64,PUTTAQUI_TUTTA_LA_TUA_BASE64_INTERA",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}'>
+
+<!-- Icona per browser -->
+<link rel="icon" type="image/png" href="data:image/png;base64,PUTTAQUI_TUTTA_LA_TUA_BASE64_INTERA">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  h1 { color: #6a0dad; }
+  .crocette-bar {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .crocetta {
+    font-size: 32px;
+  }
+  button {
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    background-color: #6a0dad;
+    color: white;
+    cursor: pointer;
+  }
+  button:hover { background-color: #4b006e; }
+
+  /* POPUP STYLES */
+  .modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 85%;
+    max-width: 350px;
+    text-align: center;
+  }
+  .modal-box input {
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    font-size: 16px;
+  }
+  .modal-box button {
+    width: 100%;
+    margin-top: 10px;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Abbonamento Crocette</h1>
+<p id="totCrocetteText">Crocette totali: 0</p>
+<div class="crocette-bar" id="crocetteBar"></div>
+
+<button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
+<button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
+<button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Prenota Lezione</button>
+
+<div id="pwPopup" class="modal">
+  <div class="modal-box">
+    <h3>Inserisci password</h3>
+    <input id="pwInput" type="password" placeholder="Password">
+    <button onclick="confermaPassword()">Conferma</button>
+    <button onclick="chiudiPopupPassword()">Annulla</button>
+  </div>
+</div>
+
+<div id="prenotaPopup" class="modal">
+  <div class="modal-box">
+    <h3>Prenota Lezione</h3>
+    <input id="nomeInput" type="text" placeholder="Tuo Nome">
+    <input id="emailInput" type="email" placeholder="Tua Email">
+    <input id="dateInput" type="text" placeholder="Date (es: 20/03, 25/03)">
+    <p style="font-size: 12px; color: #666; margin-top: 10px;">L'invio aprirà la tua app email.</p>
+    <button onclick="inviaPrenotazione()" style="background-color: #28a745;">Invia Prenotazione</button>
+    <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
+  </div>
+</div>
+
+<script>
+// --- LOGICA GESTIONE CROCETTE ---
+let totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
+
+function aggiornaBarra() {
+  document.getElementById('totCrocetteText').innerText = `Crocette totali: ${totCrocette}`;
+  const bar = document.getElementById('crocetteBar');
+  bar.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const div = document.createElement('div');
+    div.className = 'crocetta';
+    div.textContent = i < totCrocette ? '✅' : '🔲';
+    bar.appendChild(div);
+  }
+  localStorage.setItem('tot_crocette', totCrocette);
+}
+
+function aggiungiCrocette() {
+  let qta = prompt("Quante crocette vuoi aggiungere?");
+  qta = parseInt(qta);
+  if (isNaN(qta) || qta < 1) return;
+  
+  if (totCrocette + qta <= 10) {
+    totCrocette += qta;
+  } else {
+    if (confirm(`Supereresti 10. Vuoi acquistare un nuovo abbonamento?`)) {
+      totCrocette = (totCrocette + qta) - 10;
+    }
+  }
+  aggiornaBarra();
+}
+
+// --- LOGICA PASSWORD ---
+function apriPopupPassword() { document.getElementById("pwPopup").style.display = "flex"; }
+function chiudiPopupPassword() { document.getElementById("pwPopup").style.display = "none"; }
+
+function confermaPassword() {
+  if (document.getElementById("pwInput").value === "Goldens68") {
+    chiudiPopupPassword();
+    eliminaCrocetteConfermata();
+  } else {
+    alert("Password errata!");
+  }
+}
+
+function eliminaCrocetteConfermata() {
+  let qta = parseInt(prompt(`Quante crocette vuoi cancellare? (Max: ${totCrocette})`));
+  if (isNaN(qta)) return;
+  totCrocette = Math.max(0, totCrocette - qta);
+  aggiornaBarra();
+}
+
+// --- LOGICA PRENOTAZIONE ---
+function apriPopupPrenotazione() {
+  document.getElementById("prenotaPopup").style.display = "flex";
+}
+
+function chiudiPopupPrenotazione() {
+  document.getElementById("prenotaPopup").style.display = "none";
+}
+
+function inviaPrenotazione() {
+  const nome = document.getElementById("nomeInput").value.trim();
+  const emailUtente = document.getElementById("emailInput").value.trim();
+  const date = document.getElementById("dateInput").value.trim();
+  const emailDestinatario = "spadasamuele06@gmail.com";
+
+  if (!nome || !emailUtente || !date) {
+    alert("Per favore, compila tutti i campi.");
+    return;
+  }
+
+  // Salvataggio locale
+  const nuovaPrenotazione = {
+    nome: nome,
+    email: emailUtente,
+    date: date,
+    timestamp: new Date().toISOString()
+  };
+
+  let storico = JSON.parse(localStorage.getItem('prenotazioni')) || [];
+  storico.push(nuovaPrenotazione);
+  localStorage.setItem('prenotazioni', JSON.stringify(storico));
+
+  // Email
+  const oggetto = "Prenotazione Lezione - " + nome;
+  const corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
+
+  // Link universale
+  const mailtoLink =
+    `mailto:${emailDestinatario}` +
+    `?subject=${encodeURIComponent(oggetto)}` +
+    `&body=${encodeURIComponent(corpo)}`;
+
+  // Apertura app email
+  window.location.href = mailtoLink;
+
+  chiudiPopupPrenotazione();
+  alert("Richiesta generata! Ora completa l'invio nell'app email.");
+}
+
+aggiornaBarra();
+</script>
+
+</body>
+</html>
