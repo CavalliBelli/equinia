@@ -176,6 +176,11 @@
   
 // VERSIONE DELL’APP
 const APP_VERSION = "1.0.1";
+  
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .catch(err => console.log("SW error:", err));
+}
 
 // CONTROLLO VERSIONE x eventuale Popup aggiornamento
 document.addEventListener("DOMContentLoaded", () => {
