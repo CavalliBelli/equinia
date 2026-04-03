@@ -105,17 +105,6 @@
 <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
 <button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button>
 
-<div id="updatePopup" class="modal">
-  <div class="modal-box">
-    <h3>Aggiornamento disponibile</h3>
-    <p style="font-size:14px; text-align:left;">
-      È stata pubblicata una nuova versione dell’app.<br><br>
-      Per aggiornare, scorri verso il basso nella schermata dell’app. Successivamente clicca il pulsante "Ok" qui sotto per iniziare ad usare l'app
-    </p>
-    <button onclick="chiudiUpdatePopup()" style="background-color:#6a0dad;">Ok</button>
-  </div>
-</div>
-
 <div id="pwPopup" class="modal">
   <div class="modal-box">
     <h3>Inserisci password</h3>
@@ -170,19 +159,32 @@
   </div>
 </div>
 
-
+<div id="updatePopup" class="modal">
+  <div class="modal-box">
+    <h3>Aggiornamento disponibile</h3>
+    <p style="font-size:14px; text-align:left;">
+      È stata pubblicata una nuova versione dell’app.<br><br>
+      Per aggiornare, scorri verso il basso nella schermata dell’app. Successivamente clicca il pulsante "Ok" qui sotto per iniziare ad usare l'app
+    </p>
+    <button onclick="chiudiUpdatePopup()" style="background-color:#6a0dad;">Ok</button>
+  </div>
+</div>
   
 <script>
   
 // VERSIONE DELL’APP
-const APP_VERSION = "1.0.5";
-  
+<script>
+
+// VERSIONE DELL’APP — cambia numero quando aggiorni
+const APP_VERSION = "1.0.0";
+
+// REGISTRAZIONE SERVICE WORKER
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js")
     .catch(err => console.log("SW error:", err));
 }
 
-// CONTROLLO VERSIONE x eventuale Popup aggiornamento
+// CONTROLLO VERSIONE (mostra popup se cambia)
 document.addEventListener("DOMContentLoaded", () => {
   const savedVersion = localStorage.getItem("app_version");
 
@@ -193,12 +195,11 @@ document.addEventListener("DOMContentLoaded", () => {
   localStorage.setItem("app_version", APP_VERSION);
 });
 
-// FUNZIONE PER CHIUDERE IL POPUP SE APERTO
+// 🔵 CHIUSURA POPUP AGGIORNAMENTO
 function chiudiUpdatePopup() {
   document.getElementById("updatePopup").style.display = "none";
 }
 
-  
 function confermaLogin() {
   const pw = document.getElementById("loginPwInput").value.trim();
 
