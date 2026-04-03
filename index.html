@@ -5,6 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Equinia</title>
+  
+<p style="margin-top:10px;">
+  <a href="#" onclick="document.getElementById('installPopup').style.display='flex';" 
+     style="color:#6a0dad; text-decoration:underline; font-size:14px;">
+     📲 Come installare l’app
+  </a>
+</p>
+
+<div id="installPopup" class="modal">
+  <div class="modal-box">
+    <h3>Installa Equinia</h3>
+    <p style="font-size:14px; text-align:left;">
+      📱 <b>Questa piattaforma è installabile come App!</b><br><br>
+    <b> Se stai usando Android:</b> premi i tre puntini in alto → <i>Aggiungi a schermata Home</i>.<br>
+    <b>Se stai usando iPhone:</b> premi il tasto <i>Condividi</i> → <i>Aggiungi alla schermata Home</i>
+    </p>
+    
+    <button onclick="chiudiInstallPopup()" style="background-color:#6a0dad;">Ho capito</button>
+  </div>
+</div>
+  
 <!-- Icona per app schermata home -->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-512.png">
@@ -137,6 +158,10 @@
   
 <script>
 
+function chiudiInstallPopup() {
+  document.getElementById("installPopup").style.display = "none";
+}
+  
 function confermaLogin() {
   const pw = document.getElementById("loginPwInput").value.trim();
 
