@@ -126,6 +126,27 @@
   </div>
 </div>
 
+<div id="privacyPopup" class="modal">
+  <div class="modal-box">
+    <h3>Informativa Privacy</h3>
+    <p style="font-size: 14px; text-align: left;">
+      I dati inseriti (nome ed email) vengono utilizzati esclusivamente per gestire la prenotazione delle lezioni.
+      Non vengono ceduti a terzi, non vengono usati per finalità commerciali e rimangono memorizzati solo sul dispositivo dell’utente.
+      L’invio dell’email comporta la comunicazione dei dati al solo indirizzo dell’istruttrice ai fini organizzativi.
+    </p>
+    <label style="display:flex; align-items:center; gap:8px; margin:10px 0;">
+      <input type="checkbox" id="privacyCheck">
+      <span style="font-size:14px;">Ho letto e accetto l’informativa</span>
+    </label>
+    <button id="privacyAcceptBtn" onclick="accettaPrivacy()" disabled style="background-color: #28a745; opacity: 0.5;">
+      Accetto e invia
+    </button>
+    <button onclick="chiudiPrivacy()" style="background-color: #6c757d;">
+      Annulla
+    </button>
+  </div>
+</div>
+  
 <script>
 
 function confermaLogin() {
@@ -202,41 +223,62 @@ function inviaPrenotazione() {
   const nome = document.getElementById("nomeInput").value.trim();
   const emailUtente = document.getElementById("emailInput").value.trim();
   const date = document.getElementById("dateInput").value.trim();
-  const emailDestinatario = "spadasamuele06@gmail.com";
 
   if (!nome || !emailUtente || !date) {
     alert("Per favore, compila tutti i campi.");
     return;
   }
 
-  // Salvataggio locale
-  const nuovaPrenotazione = {
-    nome: nome,
-    email: emailUtente,
-    date: date,
-    timestamp: new Date().toISOString()
-  };
+  // Salvo temporaneamente i dati per usarli dopo l'accettazione privacy
+  window._prenotazioneTemp = { nome, emailUtente, date };
 
-  let storico = JSON.parse(localStorage.getItem('prenotazioni')) || [];
-  storico.push(nuovaPrenotazione);
-  localStorage.setItem('prenotazioni', JSON.stringify(storico));
+  // Apro popup privacy
+  document.getElementById("privacyPopup").style.display = "flex";
+}
 
-  // Email
+function chiudiPrivacy() {
+  document.getElementById("privacyPopup").style.display = "none";
+}
+
+function accettaPrivacy() {
+  if (!document.getElementById("privacyCheck").checked) {
+    alert("Devi accettare l’informativa per procedere.");
+    return;
+  }
+
+  const { nome, emailUtente, date } = window._prenotazioneTemp;
+  const emailDestinatario = "spadasamuele06@gmail.com";
+
   const oggetto = "Prenotazione Lezione - " + nome;
   const corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
 
-  // Link universale
   const mailtoLink =
     `mailto:${emailDestinatario}` +
     `?subject=${encodeURIComponent(oggetto)}` +
     `&body=${encodeURIComponent(corpo)}`;
 
-  // Apertura app email
   window.location.href = mailtoLink;
 
+  document.getElementById("privacyPopup").style.display = "none";
   chiudiPopupPrenotazione();
-  alert("Email composta con successo! Clicca qui sotto per ultimare la richiesta.");
+  alert("Email composta con successo! Ora completa l'invio nell'app email.");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const check = document.getElementById("privacyCheck");
+  const btn = document.getElementById("privacyAcceptBtn");
+
+  check.addEventListener("change", () => {
+    if (check.checked) {
+      btn.disabled = false;
+      btn.style.opacity = "1";
+    } else {
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+    }
+  });
+});
+  
 aggiornaBarra();
 </script>
 
