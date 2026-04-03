@@ -103,7 +103,7 @@
 
 <button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
 <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
-<button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Prenota Lezione</button>
+<button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button>
 
 <div id="pwPopup" class="modal">
   <div class="modal-box">
@@ -116,11 +116,10 @@
 
 <div id="prenotaPopup" class="modal">
   <div class="modal-box">
-    <h3>Prenota Lezione</h3>
-    <input id="nomeInput" type="text" placeholder="Inserisci qui il tuo Nome">
+    <h3>Inserimento dati</h3>
+    <input id="nomeInput" type="text" placeholder="Inserisci qui il tuo Nome e Cognome">
     <input id="emailInput" type="email" placeholder="Inserisci qui la tua Email">
-    <input id="dateInput" type="text" placeholder="Inserisci le date da te desiderate">
-    <p style="font-size: 16px; color: #666; margin-top: 10px;">L'invio aprirà la tua app email.</p>
+    <input id="dateInput" type="text" placeholder="Inserisci qui le date da te desiderate">
     <button onclick="inviaPrenotazione()" style="background-color: #28a745;">Conferma dati</button>
     <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
   </div>
@@ -130,7 +129,7 @@
   <div class="modal-box">
     <h3>Informativa Privacy</h3>
     <p style="font-size: 14px; text-align: left;">
-      I dati inseriti (nome ed email) vengono utilizzati esclusivamente per gestire la prenotazione delle lezioni.
+      I dati personali inseriti (nome, cognome ed email) vengono utilizzati esclusivamente per gestire la prenotazione delle lezioni.
       Non vengono ceduti a terzi, non vengono usati per finalità commerciali e rimangono memorizzati solo sul dispositivo dell’utente.
       L’invio dell’email comporta la comunicazione dei dati al solo indirizzo dell’istruttrice ai fini organizzativi.
     </p>
@@ -139,7 +138,7 @@
       <span style="font-size:14px;">Ho letto e accetto l’informativa</span>
     </label>
     <button id="privacyAcceptBtn" onclick="accettaPrivacy()" disabled style="background-color: #28a745; opacity: 0.5;">
-      Accetto e invia
+      Accetta e continua invio mail
     </button>
     <button onclick="chiudiPrivacy()" style="background-color: #6c757d;">
       Annulla
