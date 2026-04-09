@@ -312,7 +312,7 @@ function requireLogin() {
   function confermaPassword() {
   const pw = document.getElementById("pwInput").value.trim();
 
-  // Password "Goldens68" in ASCII
+  // Password elimina crocette in ASCII
   const PW_DEL = [71,111,108,100,101,110,115,54,56];
 
   const inputCodes = Array.from(pw).map(c => c.charCodeAt(0));
