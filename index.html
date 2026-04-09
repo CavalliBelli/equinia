@@ -183,7 +183,7 @@
   // Stato login
 let LOGGED_IN = false;
 
-// Password "Stagione2026" convertita in codici ASCII
+// Password login
 const PW_CODES = [83,116,97,103,105,111,110,101,50,48,50,54];
 
 // Funzione che verifica la password senza averla in chiaro
@@ -310,13 +310,32 @@ function requireLogin() {
   }
 
   function confermaPassword() {
-    if (document.getElementById("pwInput").value === "Goldens68") {
-      chiudiPopupPassword();
-      eliminaCrocetteConfermata();
-    } else {
+  const pw = document.getElementById("pwInput").value.trim();
+
+  // Password "Goldens68" in ASCII
+  const PW_DEL = [71,111,108,100,101,110,115,54,56];
+
+  const inputCodes = Array.from(pw).map(c => c.charCodeAt(0));
+
+  if (inputCodes.length !== PW_DEL.length) {
+    alert("Password errata!");
+    return;
+  }
+
+  for (let i = 0; i < PW_DEL.length; i++) {
+    if (inputCodes[i] !== PW_DEL[i]) {
       alert("Password errata!");
+      return;
     }
   }
+
+  // Se la password è corretta:
+  chiudiPopupPassword();
+  eliminaCrocetteConfermata();
+
+  // 🔥 Reset immediato del campo password
+  document.getElementById("pwInput").value = "";
+}
 
   function eliminaCrocetteConfermata() {
     let qta = parseInt(prompt(`Quante crocette vuoi cancellare? (Max: ${totCrocette})`));
