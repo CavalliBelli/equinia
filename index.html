@@ -209,16 +209,6 @@ function confermaLogin() {
   }
 
 
-// Funzione helper per bloccare tutto se non loggato
-function requireLogin() {
-  if (!LOGGED_IN) {
-    document.getElementById("loginPopup").style.display = "flex";
-    alert("Devi effettuare l’accesso.");
-    return false;
-  }
-  return true;
-}
-
   // CONTROLLO VERSIONE (mostra popup se cambia)
   document.addEventListener("DOMContentLoaded", () => {
     const savedVersion = localStorage.getItem("app_version");
