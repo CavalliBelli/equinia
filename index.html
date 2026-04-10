@@ -242,15 +242,6 @@ function confermaLogin() {
     document.getElementById("updatePopup").style.display = "none";
   }
 
-  // LOGIN INIZIALE
-  function _0xa1b2() {
-    const pw = document.getElementById("loginPwInput").value.trim();
-    if (pw === "Stagione2026") {
-      document.getElementById("loginPopup").style.display = "none";
-    } else {
-      alert("Password errata!");
-    }
-  }
 
   // --- LOGICA GESTIONE CROCETTE ---
   let totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
