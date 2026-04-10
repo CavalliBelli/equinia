@@ -207,15 +207,7 @@ function confermaLogin() {
     LOGGED_IN = false;
     alert("Password errata!");
   }
-}
 
-// Anti‑manomissione: se uno chiude il popup senza login → lo riapro
-setInterval(() => {
-  const loginPopup = document.getElementById("loginPopup");
-  if (!LOGGED_IN && loginPopup.style.display === "none") {
-    loginPopup.style.display = "flex";
-  }
-}, 1000);
 
 // Funzione helper per bloccare tutto se non loggato
 function requireLogin() {
