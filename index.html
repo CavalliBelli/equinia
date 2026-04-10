@@ -186,28 +186,16 @@ let LOGGED_IN = false;
 // Password login
 const PW_CODES = [83,116,97,103,105,111,110,101,50,48,50,54];
 
-// Funzione che verifica la password senza averla in chiaro
-function verificaPassword(input) {
-  const inputCodes = Array.from(input).map(c => c.charCodeAt(0));
-  if (inputCodes.length !== PW_CODES.length) return false;
-  for (let i = 0; i < PW_CODES.length; i++) {
-    if (inputCodes[i] !== PW_CODES[i]) return false;
+
+// LOGIN INIZIALE
+  function _0xa1b2() {
+    const pw = document.getElementById("loginPwInput").value.trim();
+    if (pw === "Stagione2026") {
+      document.getElementById("loginPopup").style.display = "none";
+    } else {
+      alert("Password errata!");
+    }
   }
-  return true;
-}
-
-// Login sicuro
-function confermaLogin() {
-  const pw = document.getElementById("loginPwInput").value.trim();
-
-  if (verificaPassword(pw)) {
-    LOGGED_IN = true;
-    document.getElementById("loginPopup").style.display = "none";
-  } else {
-    LOGGED_IN = false;
-    alert("Password errata!");
-  }
-
 
   // CONTROLLO VERSIONE (mostra popup se cambia)
   document.addEventListener("DOMContentLoaded", () => {
