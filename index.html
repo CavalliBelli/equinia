@@ -89,7 +89,7 @@
     </div>
   </div>
 
-  <h2>Segna le crocette e proponi le tue date per la lezione in una sola app!</h2>
+  <h2>Il tuo abbonamento è ora anche digitale!</h2>
 
   <p id="totCrocetteText">Crocette totali: 0</p>
   <div class="crocette-bar" id="crocetteBar"></div>
@@ -103,7 +103,7 @@
 
   <button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
   <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
-  <button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button>
+  <!-- <button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button> -->
 
   <!-- POPUP PASSWORD ELIMINAZIONE CROCETTE -->
   <div id="pwPopup" class="modal">
@@ -115,7 +115,7 @@
     </div>
   </div>
 
-  <!-- POPUP PRENOTAZIONE -->
+  <!-- POPUP PRENOTAZIONE 
   <div id="prenotaPopup" class="modal">
     <div class="modal-box">
       <h3>Inserimento dati</h3>
@@ -125,9 +125,9 @@
       <button onclick="inviaPrenotazione()" style="background-color: #28a745;">Conferma dati</button>
       <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
     </div>
-  </div>
+  </div> -->
 
-  <!-- POPUP PRIVACY -->
+  <!-- POPUP PRIVACY 
   <div id="privacyPopup" class="modal">
     <div class="modal-box">
       <h3>Informativa Privacy</h3>
@@ -148,6 +148,7 @@
       </button>
     </div>
   </div>
+  -->
 
   <!-- POPUP INSTALL APP -->
   <div id="installPopup" class="modal">
@@ -306,7 +307,7 @@ const PW_CODES = [83,116,97,103,105,111,110,101,50,48,50,54];
   }
 
   // --- LOGICA PRENOTAZIONE ---
-  function apriPopupPrenotazione() {
+ /* function apriPopupPrenotazione() {
     document.getElementById("prenotaPopup").style.display = "flex";
   }
 
@@ -330,12 +331,12 @@ const PW_CODES = [83,116,97,103,105,111,110,101,50,48,50,54];
     // Apro popup privacy
     document.getElementById("privacyPopup").style.display = "flex";
   }
-
+*/
   function chiudiInstallPopup() {
     document.getElementById("installPopup").style.display = "none";
   }
 
-  function chiudiPrivacy() {
+ /* function chiudiPrivacy() {
     document.getElementById("privacyPopup").style.display = "none";
   }
 
@@ -360,7 +361,7 @@ const PW_CODES = [83,116,97,103,105,111,110,101,50,48,50,54];
     document.getElementById("privacyPopup").style.display = "none";
     chiudiPopupPrenotazione();
     alert("Email composta con successo! Ora completa l'invio nell'app email.");
-  }
+  }*/
   </script>
 </body>
 </html>
