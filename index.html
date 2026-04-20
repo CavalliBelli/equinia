@@ -302,14 +302,16 @@ const PW_CODES = [83,116,97,103,105,111,110,101,50,48,50,54];
 
   function eliminaCrocetteConfermata() {
     let qta = parseInt(prompt(`Quante crocette vuoi cancellare? (Max: ${totCrocette})`));
+    if (isNaN(qta) || qta < 1) return;
     
-    if (qta < totCrocette) {
-    if (isNaN(qta)) return;
-    totCrocette = Math.max(0, totCrocette - qta);
-    aggiornaBarra();
+    if (qta > totCrocette) {
+        alert(`Non è stato possibile cancellare ${qta} crocette. Ci sono solo ${totCrocette} crocette.`);
+        return;
     }
     
-  }
+    totCrocette -= qta;
+    aggiornaBarra();
+}
 
   // --- LOGICA PRENOTAZIONE ---
  /* function apriPopupPrenotazione() {
