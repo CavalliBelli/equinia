@@ -304,12 +304,11 @@ const PW_CODES = [83,116,97,103,105,111,110,101,50,48,50,54];
     let qta = parseInt(prompt(`Quante crocette vuoi cancellare? (Max: ${totCrocette})`));
     
     if (qta < totCrocette) {
+    if (isNaN(qta)) return;
     totCrocette = Math.max(0, totCrocette - qta);
     aggiornaBarra();
-    } else {
-      prompt("Non è possibile, ci sono solo" ${totCrocette} "crocette" )
     }
-    if (isNaN(qta)) return;
+    
   }
 
   // --- LOGICA PRENOTAZIONE ---
