@@ -279,23 +279,18 @@ let LOGGED_IN = false;
     document.getElementById("pwPopup").style.display = "none";
   }
     
-  async function confermaPassword() {
+ async function confermaPassword() {
   const pw = document.getElementById("pwInput").value.trim();
   const hash = await hashPassword(pw);
   const HASH_DEL = "mcB7YfvghoD7AnNC443ndLFzw/i2oUH6KHxmNegNryg=";
 
-  const inputCodes = Array.from(pw).map(c => c.charCodeAt(0));
-
-  if (inputCodes.length !== PW_DEL.length) {
-    alert("Password errata!");
-    return;
-  }
   if (hash === HASH_DEL) {
     chiudiPopupPassword();
     eliminaCrocetteConfermata();
     document.getElementById("pwInput").value = "";
   } else {
     alert("Password errata!");
+    document.getElementById("pwInput").value = "";
   }
 }
 
