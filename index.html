@@ -197,7 +197,7 @@ let LOGGED_IN = false;
   async function _0xa1b2() {
   const pw = document.getElementById("loginPwInput").value.trim();
   const hash = await hashPassword(pw);
-  const HASH_LOGIN = "TPWgtNPob+haxTkZ9QkEKvntNeD8bJXsbTXws3l43ag=";
+  const HASH_LOGIN = "4cf5a0b4d3e86fe85ac53919f509042af9ed35e0fc6c95ec6d35f0b37978dda8";
   if (hash === HASH_LOGIN) {
     document.getElementById("loginPopup").style.display = "none";
   } else {
@@ -282,7 +282,7 @@ let LOGGED_IN = false;
  async function confermaPassword() {
   const pw = document.getElementById("pwInput").value.trim();
   const hash = await hashPassword(pw);
-  const HASH_DEL = "mcB7YfvghoD7AnNC443ndLFzw/i2oUH6KHxmNegNryg=";
+  const HASH_DEL = "99c07b61fbe08680fb027342e38de774b173c3f8b6a141fa287c6635e80daf28";
 
   if (hash === HASH_DEL) {
     chiudiPopupPassword();
