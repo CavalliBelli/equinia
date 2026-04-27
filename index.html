@@ -94,6 +94,9 @@
   <button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
   <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
 
+  <!-- PULSANTE PRENOTAZIONE — rimuovi il commento quando vuoi attivarlo -->
+  <!-- <button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button> -->
+
   <!-- POPUP PASSWORD ELIMINAZIONE CROCETTE -->
   <div id="pwPopup" class="modal">
     <div class="modal-box">
@@ -103,6 +106,40 @@
       <button onclick="chiudiPopupPassword()">Annulla</button>
     </div>
   </div>
+
+  <!-- POPUP PRENOTAZIONE — rimuovi il commento quando vuoi attivarlo
+  <div id="prenotaPopup" class="modal">
+    <div class="modal-box">
+      <h3>Inserimento dati</h3>
+      <input id="nomeInput" type="text" placeholder="Inserisci qui il tuo Nome e Cognome">
+      <input id="emailInput" type="email" placeholder="Inserisci qui la tua Email">
+      <input id="dateInput" type="text" placeholder="Inserisci qui le date. Es: 01/01, 03/01">
+      <button onclick="inviaPrenotazione()" style="background-color: #28a745;">Conferma dati</button>
+      <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
+  -->
+
+  <!-- POPUP PRIVACY — rimuovi il commento quando vuoi attivarlo
+  <div id="privacyPopup" class="modal">
+    <div class="modal-box">
+      <h3>Informativa Privacy</h3>
+      <p style="font-size: 14px; text-align: left;">
+        I dati personali inseriti (nome, cognome ed email) vengono utilizzati esclusivamente per gestire la prenotazione delle lezioni.
+        Non vengono ceduti a terzi, non vengono usati per finalità commerciali e rimangono memorizzati solo sul dispositivo dell'utente.
+        L'invio dell'email comporta la comunicazione dei dati al solo indirizzo dell'istruttrice ai fini organizzativi.
+      </p>
+      <label style="display:flex; align-items:center; gap:8px; margin:10px 0;">
+        <input type="checkbox" id="privacyCheck">
+        <span style="font-size:14px;">Ho letto e accetto l'informativa</span>
+      </label>
+      <button id="privacyAcceptBtn" onclick="accettaPrivacy()" disabled style="background-color: #28a745; opacity: 0.5;">
+        Continua con invio email
+      </button>
+      <button onclick="chiudiPrivacy()" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
+  -->
 
   <!-- POPUP INSTALL APP -->
   <div id="installPopup" class="modal">
@@ -137,12 +174,7 @@
     // ─────────────────────────────────────────
     // VERSIONE APP
     // ─────────────────────────────────────────
-    const APP_VERSION = "1.0.0";
-
-    // ─────────────────────────────────────────
-    // HASH SHA-256 DELLE PASSWORD
-    // Per cambiarle: vai su https://emn178.github.io/online-tools/sha256.html
-    // incolla la tua password, copia l'output e sostituiscilo qui sotto
+    const APP_VERSION = "1.0.0";  
     // ─────────────────────────────────────────
     const HASH_LOGIN = "4cf5a0b4d3e86fe85ac53919f509042af9ed35e0fc6c95ec6d35f0b37978dda8";
     const HASH_DEL   = "99c07b61fbe08680fb027342e38de774b173c3f8b6a141fa287c6635e80daf28";
@@ -167,6 +199,16 @@
         document.getElementById("updatePopup").style.display = "flex";
       }
       localStorage.setItem("app_version", APP_VERSION);
+
+      /* PRIVACY CHECKBOX — rimuovi il commento quando attivi la prenotazione
+      const check = document.getElementById("privacyCheck");
+      const btn = document.getElementById("privacyAcceptBtn");
+      check.addEventListener("change", () => {
+        btn.disabled = !check.checked;
+        btn.style.opacity = check.checked ? "1" : "0.5";
+      });
+      */
+
       aggiornaBarra();
     });
 
@@ -263,6 +305,54 @@
     function chiudiInstallPopup() {
       document.getElementById("installPopup").style.display = "none";
     }
+
+    // ─────────────────────────────────────────
+    // PRENOTAZIONE — rimuovi il commento quando vuoi attivare la funzione
+    // ─────────────────────────────────────────
+    /*
+    function apriPopupPrenotazione() {
+      document.getElementById("prenotaPopup").style.display = "flex";
+    }
+
+    function chiudiPopupPrenotazione() {
+      document.getElementById("prenotaPopup").style.display = "none";
+    }
+
+    function inviaPrenotazione() {
+      const nome = document.getElementById("nomeInput").value.trim();
+      const emailUtente = document.getElementById("emailInput").value.trim();
+      const date = document.getElementById("dateInput").value.trim();
+      if (!nome || !emailUtente || !date) {
+        alert("Per favore, compila tutti i campi.");
+        return;
+      }
+      window._prenotazioneTemp = { nome, emailUtente, date };
+      document.getElementById("privacyPopup").style.display = "flex";
+    }
+
+    function chiudiPrivacy() {
+      document.getElementById("privacyPopup").style.display = "none";
+    }
+
+    function accettaPrivacy() {
+      if (!document.getElementById("privacyCheck").checked) {
+        alert("Devi accettare l'informativa per procedere.");
+        return;
+      }
+      const { nome, emailUtente, date } = window._prenotazioneTemp;
+      const emailDestinatario = "tuaemail@gmail.com"; // <-- inserisci qui la tua email
+      const oggetto = "Prenotazione Lezione - " + nome;
+      const corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
+      const mailtoLink =
+        `mailto:${emailDestinatario}` +
+        `?subject=${encodeURIComponent(oggetto)}` +
+        `&body=${encodeURIComponent(corpo)}`;
+      window.location.href = mailtoLink;
+      document.getElementById("privacyPopup").style.display = "none";
+      chiudiPopupPrenotazione();
+      alert("Email composta con successo! Ora completa l'invio nell'app email.");
+    }
+    */
 
   </script>
 </body>
