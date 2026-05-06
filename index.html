@@ -356,11 +356,11 @@
         return;
       }
       const { nome, emailUtente, date } = window._prenotazioneTemp;
-      const emailDestinatario = "tuaemail@gmail.com"; // <-- inserisci qui la tua email
+      const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20="); 
       const oggetto = "Prenotazione Lezione - " + nome;
       const corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
       const mailtoLink =
-        `mailto:${emailDestinatario}` +
+        `mailto:${_3m41}` +
         `?subject=${encodeURIComponent(oggetto)}` +
         `&body=${encodeURIComponent(corpo)}`;
       window.location.href = mailtoLink;
