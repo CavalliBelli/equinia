@@ -94,8 +94,8 @@
   <button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
   <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
 
-  <!-- PULSANTE PRENOTAZIONE — rimuovi il commento quando vuoi attivarlo -->
-  <!-- <button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button> -->
+  <!-- PULSANTE PRENOTAZIONE -->
+  <button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button>
 
   <!-- POPUP PASSWORD ELIMINAZIONE CROCETTE -->
   <div id="pwPopup" class="modal">
@@ -107,7 +107,7 @@
     </div>
   </div>
 
-  <!-- POPUP PRENOTAZIONE — rimuovi il commento quando vuoi attivarlo
+  
   <div id="prenotaPopup" class="modal">
     <div class="modal-box">
       <h3>Inserimento dati</h3>
@@ -118,9 +118,9 @@
       <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
     </div>
   </div>
-  -->
+ 
 
-  <!-- POPUP PRIVACY — rimuovi il commento quando vuoi attivarlo
+  <!-- POPUP PRIVACY — rimuovi il commento quando vuoi attivarlo  -->
   <div id="privacyPopup" class="modal">
     <div class="modal-box">
       <h3>Informativa Privacy</h3>
@@ -139,7 +139,7 @@
       <button onclick="chiudiPrivacy()" style="background-color: #6c757d;">Annulla</button>
     </div>
   </div>
-  -->
+ 
 
   <!-- POPUP INSTALL APP -->
   <div id="installPopup" class="modal">
@@ -206,14 +206,14 @@
       }
       localStorage.setItem("app_version", APP_VERSION);
 
-      /* PRIVACY CHECKBOX — rimuovi il commento quando attivi la prenotazione
+      /* PRIVACY CHECKBOX —*/
       const check = document.getElementById("privacyCheck");
       const btn = document.getElementById("privacyAcceptBtn");
       check.addEventListener("change", () => {
         btn.disabled = !check.checked;
         btn.style.opacity = check.checked ? "1" : "0.5";
       });
-      */
+      
 
       aggiornaBarra();
     });
@@ -313,9 +313,9 @@
     }
 
     // ─────────────────────────────────────────
-    // PRENOTAZIONE — rimuovi il commento quando vuoi attivare la funzione
+    // PRENOTAZIONE
     // ─────────────────────────────────────────
-    /*
+    
     function apriPopupPrenotazione() {
       document.getElementById("prenotaPopup").style.display = "flex";
     }
@@ -358,7 +358,7 @@
       chiudiPopupPrenotazione();
       alert("Email composta con successo! Ora completa l'invio nell'app email.");
     }
-    */
+  
 
   </script>
 </body>
