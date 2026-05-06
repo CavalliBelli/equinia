@@ -84,7 +84,7 @@
   <p id="totCrocetteText">Crocette totali: 0</p>
   <div class="crocette-bar" id="crocetteBar"></div>
 
-  <p style="margin-top:10px;">
+  <p id="installLink" style="margin-top:10px;">
     <a href="#" onclick="document.getElementById('installPopup').style.display='flex';"
        style="color:#6a0dad; text-decoration:underline; font-size:18px;">
        📲 Come installare l'app
@@ -213,7 +213,17 @@
         btn.disabled = !check.checked;
         btn.style.opacity = check.checked ? "1" : "0.5";
       });
+
+      // Nascondi link installazione se già installata
+      if (localStorage.getItem("pwa_installed") === "true") {
+        document.getElementById("installLink").style.display = "none";
+      }
       
+      // Quando viene installata, salva il flag e nascondi
+      window.addEventListener("appinstalled", () => {
+        localStorage.setItem("pwa_installed", "true");
+        document.getElementById("installLink").style.display = "none";
+      });
 
       aggiornaBarra();
     });
