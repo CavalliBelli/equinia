@@ -92,7 +92,7 @@
   <div class="crocette-bar" id="crocetteBar"></div>
 
   <p id="installLink" style="margin-top:10px;">
-    <a href="#" onclick="document.getElementById('installPopup').style.display='flex';"
+    <a href="#" onclick="apriStorico()";"
        style="color:#6a0dad; text-decoration:underline; font-size:18px;">
        📲 Come installare l'app
     </a>
@@ -174,7 +174,8 @@
     <div class="modal-box">
       <h3>📋 Storico</h3>
       <div id="storicoLista" style="text-align:left; font-size:14px; max-height:300px; overflow-y:auto;"></div>
-      <button onclick="apriStorico() </button>
+      <button onclick="document.getElementById('storicoPopup').style.display='none'"
+        style="background-color:#6a0dad;">Chiudi</button>
       
     </div>
   </div>
