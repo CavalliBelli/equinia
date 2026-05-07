@@ -82,6 +82,13 @@
 
   <h2>Il tuo abbonamento è ora anche digitale!</h2>
   <p id="totCrocetteText">Crocette totali: 0</p>
+  <p>
+  <a href="#" onclick="document.getElementById('storicoPopup').style.display='flex';"
+     style="color:#6a0dad; text-decoration:underline; font-size:16px;">
+     📋 Storico
+  </a>
+  </p>
+  
   <div class="crocette-bar" id="crocetteBar"></div>
 
   <p id="installLink" style="margin-top:10px;">
@@ -162,6 +169,16 @@
     </div>
   </div>
 
+  <!-- POPUP STORICO -->
+  <div id="storicoPopup" class="modal">
+    <div class="modal-box">
+      <h3>📋 Storico</h3>
+      <div id="storicoLista" style="text-align:left; font-size:14px; max-height:300px; overflow-y:auto;"></div>
+      <button onclick="document.getElementById('storicoPopup').style.display='none'"
+              style="background-color:#6a0dad;">Chiudi</button>
+    </div>
+  </div>
+  
  <!-- POPUP SCADENZA -->
   <div id="scadenzaPopup" class="modal">
     <div class="modal-box">
@@ -260,6 +277,27 @@
       document.getElementById("updatePopup").style.display = "none";
     }
 
+     // ─────────────────────────────────────────
+    //   STORICO
+   //  ─────────────────────────────────────────
+  function aggiungiStorico(messaggio) {
+    const storico = JSON.parse(localStorage.getItem("storico") || "[]");
+    const data = new Date().toLocaleDateString('it-IT');
+    storico.unshift(`${messaggio} — ${data}`);
+    if (storico.length > 10) storico.pop();
+    localStorage.setItem("storico", JSON.stringify(storico));
+  }
+
+  function apriStorico() {
+    const storico = JSON.parse(localStorage.getItem("storico") || "[]");
+    const lista = document.getElementById("storicoLista");
+    if (storico.length === 0) {
+      lista.innerHTML = "<p>Nessun evento registrato.</p>";
+    } else {
+      lista.innerHTML = storico.map(e => `<p>• ${e}</p>`).join('');
+    }
+    document.getElementById("storicoPopup").style.display = "flex";
+  }
     
     function controllaScadenza() {
     const dataInizio = localStorage.getItem("data_inizio_abb");
@@ -305,16 +343,18 @@
     if (isNaN(qta) || qta < 1) return;
   
     if (totCrocette + qta <= 10) {
-      // Se era a 0, salva la data di inizio abbonamento
       if (totCrocette === 0) {
         localStorage.setItem("data_inizio_abb", new Date().toISOString());
+        aggiungiStorico("🔄 Nuovo abbonamento iniziato");
       }
       totCrocette += qta;
+      aggiungiStorico(`➕ Aggiunta ${qta} crocetta/e`);
     } else {
       if (confirm(`Supereresti 10. Vuoi realizzare un nuovo abbonamento?`)) {
         totCrocette = (totCrocette + qta) - 10;
-        // Nuovo abbonamento → resetta la data
         localStorage.setItem("data_inizio_abb", new Date().toISOString());
+        aggiungiStorico("🔄 Nuovo abbonamento iniziato");
+        aggiungiStorico(`➕ Aggiunta ${qta} crocetta/e`);
       }
     }
     aggiornaBarra();
@@ -345,15 +385,16 @@
     }
 
     function eliminaCrocetteConfermata() {
-      let qta = parseInt(prompt(`Quante crocette vuoi cancellare? (Max: ${totCrocette})`));
-      if (isNaN(qta) || qta < 1) return;
-      if (qta > totCrocette) {
-        alert(`Non è stato possibile cancellare ${qta} crocette. Ci sono solo ${totCrocette} crocette.`);
-        return;
-      }
-      totCrocette -= qta;
-      aggiornaBarra();
+    let qta = parseInt(prompt(`Quante crocette vuoi cancellare? (Max: ${totCrocette})`));
+    if (isNaN(qta) || qta < 1) return;
+    if (qta > totCrocette) {
+      alert(`Non è stato possibile cancellare ${qta} crocette. Ci sono solo ${totCrocette} crocette.`);
+      return;
     }
+    totCrocette -= qta;
+    aggiungiStorico(`🗑️ Eliminate ${qta} crocetta/e`);
+    aggiornaBarra();
+  }
 
     // ─────────────────────────────────────────
     // INSTALL POPUP
