@@ -75,7 +75,7 @@
   <div id="loginPopup" class="modal" style="display: flex;">
     <div class="modal-box">
       <h3>Inserisci password di login</h3>
-      <input id="loginPwInput" type="password" placeholder="Password">
+      <input id="loginPwInput" type="password" placeholder="Password" onkeydown=" if(event.key==='Enter') _0xa1b2()">
       <button onclick="_0xa1b2()">Accedi</button>
     </div>
   </div>
@@ -162,6 +162,16 @@
     </div>
   </div>
 
+ <!-- POPUP SCADENZA -->
+  <div id="scadenzaPopup" class="modal">
+    <div class="modal-box">
+      <h3>⚠️ Abbonamento in scadenza</h3>
+      <p id="scadenzaMessaggio" style="font-size:16px; text-align:left;"></p>
+      <button onclick="document.getElementById('scadenzaPopup').style.display='none'" 
+              style="background-color:#6a0dad;">Ho capito</button>
+    </div>
+  </div>
+  
   <!-- POPUP AGGIORNAMENTO -->
   <div id="updatePopup" class="modal">
     <div class="modal-box">
@@ -224,7 +234,8 @@
         localStorage.setItem("pwa_installed", "true");
         document.getElementById("installLink").style.display = "none";
       });
-
+      
+      controllaScadenza();
       aggiornaBarra();
     });
 
@@ -249,6 +260,28 @@
       document.getElementById("updatePopup").style.display = "none";
     }
 
+    
+    function controllaScadenza() {
+    const dataInizio = localStorage.getItem("data_inizio_abb");
+    if (!dataInizio || totCrocette === 0) return;
+  
+    const inizio = new Date(dataInizio);
+    const scadenza = new Date(inizio);
+    scadenza.setMonth(scadenza.getMonth() + 3);
+  
+    const oggi = new Date();
+    const giorniRimasti = Math.ceil((scadenza - oggi) / (1000 * 60 * 60 * 24));
+  
+    if (giorniRimasti <= 30 && giorniRimasti > 0) {
+      document.getElementById("scadenzaMessaggio").innerText =
+        `Il tuo abbonamento scade tra ${giorniRimasti} giorni (il ${scadenza.toLocaleDateString('it-IT')}).\nRicordati di rinnovarlo!`;
+      document.getElementById("scadenzaPopup").style.display = "flex";
+    } else if (giorniRimasti <= 0) {
+      document.getElementById("scadenzaMessaggio").innerText =
+        `Il tuo abbonamento è scaduto il ${scadenza.toLocaleDateString('it-IT')}.\nContatta l'istruttrice per rinnovarlo.`;
+      document.getElementById("scadenzaPopup").style.display = "flex";
+    }
+  }
     // ─────────────────────────────────────────
     // CROCETTE
     // ─────────────────────────────────────────
@@ -268,17 +301,24 @@
     }
 
     function aggiungiCrocette() {
-      let qta = parseInt(prompt("Quante crocette vuoi aggiungere?"));
-      if (isNaN(qta) || qta < 1) return;
-      if (totCrocette + qta <= 10) {
-        totCrocette += qta;
-      } else {
-        if (confirm(`Supereresti 10. Vuoi realizzare un nuovo abbonamento?`)) {
-          totCrocette = (totCrocette + qta) - 10;
-        }
+    let qta = parseInt(prompt("Quante crocette vuoi aggiungere?"));
+    if (isNaN(qta) || qta < 1) return;
+  
+    if (totCrocette + qta <= 10) {
+      // Se era a 0, salva la data di inizio abbonamento
+      if (totCrocette === 0) {
+        localStorage.setItem("data_inizio_abb", new Date().toISOString());
       }
-      aggiornaBarra();
+      totCrocette += qta;
+    } else {
+      if (confirm(`Supereresti 10. Vuoi realizzare un nuovo abbonamento?`)) {
+        totCrocette = (totCrocette + qta) - 10;
+        // Nuovo abbonamento → resetta la data
+        localStorage.setItem("data_inizio_abb", new Date().toISOString());
+      }
     }
+    aggiornaBarra();
+  }
 
     // ─────────────────────────────────────────
     // ELIMINA CROCETTE
