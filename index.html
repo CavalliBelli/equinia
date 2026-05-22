@@ -67,6 +67,16 @@
       width: 100%;
       margin-top: 10px;
     }
+    /* Classe per affiancare i due pulsanti nella scelta */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .btn-row button {
+      flex: 1;
+      margin-top: 0;
+    }
   </style>
 </head>
 <body>
@@ -85,7 +95,7 @@
   <p>
   <a href="#" onclick="apriStorico()"
   style="color:#6a0dad; text-decoration:underline; font-size:16px;">
-     📋 Storico
+      📋 Storico
   </a>
   </p>
   
@@ -101,8 +111,8 @@
   <button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
   <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
 
-  <!-- PULSANTE PRENOTAZIONE -->
-  <button onclick="apriPopupPrenotazione()" style="background-color: #28a745;">📅 Proponi date per lezione</button>
+  <!-- PULSANTE PRENOTAZIONE / DISDETTA -->
+  <button onclick="apriSceltaAzione()" style="background-color: #28a745;">📅 Gestisci Lezione (Prenota/Disdici)</button>
 
   <!-- POPUP PASSWORD ELIMINAZIONE CROCETTE -->
   <div id="pwPopup" class="modal">
@@ -114,10 +124,22 @@
     </div>
   </div>
 
+  <!-- POPUP SCELTA AZIONE (NUOVO) -->
+  <div id="sceltaAzionePopup" class="modal">
+    <div class="modal-box">
+      <h3>Cosa desideri fare?</h3>
+      <div class="btn-row">
+        <button onclick="scegliAzione('prenota')" style="background-color: #28a745;">Proponi Date</button>
+        <button onclick="scegliAzione('disdici')" style="background-color: #dc3545;">Disdici Lezione</button>
+      </div>
+      <button onclick="document.getElementById('sceltaAzionePopup').style.display='none'" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
   
+  <!-- POPUP PRENOTA LEZIONE -->
   <div id="prenotaPopup" class="modal">
     <div class="modal-box">
-      <h3>Inserimento dati</h3>
+      <h3>Proponi Date</h3>
       <input id="nomeInput" type="text" placeholder="Inserisci qui il tuo Nome e Cognome">
       <input id="emailInput" type="email" placeholder="Inserisci qui la tua Email">
       <input id="dateInput" type="text" placeholder="Inserisci qui le date. Es: 01/01, 03/01">
@@ -125,9 +147,20 @@
       <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
     </div>
   </div>
- 
 
-  <!-- POPUP PRIVACY — rimuovi il commento quando vuoi attivarlo  -->
+  <!-- POPUP DISDICI LEZIONE (NUOVO) -->
+  <div id="disdiciPopup" class="modal">
+    <div class="modal-box">
+      <h3>Disdici Lezione</h3>
+      <input id="nomeDisdettaInput" type="text" placeholder="Inserisci qui il tuo Nome e Cognome">
+      <input id="emailDisdettaInput" type="email" placeholder="Inserisci qui la tua Email">
+      <input id="dateDisdettaInput" type="text" placeholder="Inserisci data da disdire. Es: 01/01">
+      <button onclick="inviaDisdetta()" style="background-color: #dc3545;">Conferma dati</button>
+      <button onclick="chiudiPopupDisdetta()" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
+ 
+  <!-- POPUP PRIVACY -->
   <div id="privacyPopup" class="modal">
     <div class="modal-box">
       <h3>Informativa Privacy</h3>
@@ -147,7 +180,6 @@
     </div>
   </div>
  
-
   <!-- POPUP INSTALL APP -->
   <div id="installPopup" class="modal">
     <div class="modal-box">
@@ -285,7 +317,7 @@
     const storico = JSON.parse(localStorage.getItem("storico") || "[]");
     const data = new Date().toLocaleDateString('it-IT');
     storico.unshift(`${messaggio} — ${data}`);
-    if (storico.length > 10) storico.pop();
+    if (storico.length > 20) storico.pop();
     localStorage.setItem("storico", JSON.stringify(storico));
   }
 
@@ -405,17 +437,33 @@
     }
 
     // ─────────────────────────────────────────
-    // PRENOTAZIONE
+    // GESTIONE EMAIL (PRENOTAZIONE / DISDETTA)
     // ─────────────────────────────────────────
     
-    function apriPopupPrenotazione() {
-      document.getElementById("prenotaPopup").style.display = "flex";
+    // Apre la modale di scelta
+    function apriSceltaAzione() {
+      document.getElementById("sceltaAzionePopup").style.display = "flex";
     }
 
+    // Gestisce la scelta (Apre Prenotazione o Disdetta)
+    function scegliAzione(azione) {
+      document.getElementById("sceltaAzionePopup").style.display = "none";
+      if (azione === 'prenota') {
+        document.getElementById("prenotaPopup").style.display = "flex";
+      } else if (azione === 'disdici') {
+        document.getElementById("disdiciPopup").style.display = "flex";
+      }
+    }
+
+    // Chiude i form
     function chiudiPopupPrenotazione() {
       document.getElementById("prenotaPopup").style.display = "none";
     }
+    function chiudiPopupDisdetta() {
+      document.getElementById("disdiciPopup").style.display = "none";
+    }
 
+    // Invia i dati al popup Privacy (Prenotazione)
     function inviaPrenotazione() {
       const nome = document.getElementById("nomeInput").value.trim();
       const emailUtente = document.getElementById("emailInput").value.trim();
@@ -424,34 +472,71 @@
         alert("Per favore, compila tutti i campi.");
         return;
       }
-      window._prenotazioneTemp = { nome, emailUtente, date };
+      window._prenotazioneTemp = { tipo: 'prenotazione', nome, emailUtente, date };
       document.getElementById("privacyPopup").style.display = "flex";
     }
 
+    // Invia i dati al popup Privacy (Disdetta)
+    function inviaDisdetta() {
+      const nome = document.getElementById("nomeDisdettaInput").value.trim();
+      const emailUtente = document.getElementById("emailDisdettaInput").value.trim();
+      const date = document.getElementById("dateDisdettaInput").value.trim();
+      if (!nome || !emailUtente || !date) {
+        alert("Per favore, compila tutti i campi.");
+        return;
+      }
+      window._prenotazioneTemp = { tipo: 'disdetta', nome, emailUtente, date };
+      document.getElementById("privacyPopup").style.display = "flex";
+    }
+
+    // Chiusura Privacy
     function chiudiPrivacy() {
       document.getElementById("privacyPopup").style.display = "none";
     }
 
+    // Accettazione Privacy e generazione Mailto (Dinamicamente differenziato)
     function accettaPrivacy() {
-      if (!document.getElementById("privacyCheck").checked) {
+      const privacyCheckbox = document.getElementById("privacyCheck");
+      const privacyBtn = document.getElementById("privacyAcceptBtn");
+
+      if (!privacyCheckbox.checked) {
         alert("Devi accettare l'informativa per procedere.");
         return;
       }
-      const { nome, emailUtente, date } = window._prenotazioneTemp;
+      
+      const { tipo, nome, emailUtente, date } = window._prenotazioneTemp;
       const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20="); 
-      const oggetto = "Prenotazione Lezione - " + nome;
-      const corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
+      
+      let oggetto = "";
+      let corpo = "";
+
+      if (tipo === 'prenotazione') {
+        oggetto = "Prenotazione Lezione - " + nome;
+        corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
+      } else if (tipo === 'disdetta') {
+        oggetto = "Disdetta Lezione - " + nome;
+        corpo = `Disdetta lezione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate da disdire: ${date}`;
+      }
+
       const mailtoLink =
         `mailto:${_3m41}` +
         `?subject=${encodeURIComponent(oggetto)}` +
         `&body=${encodeURIComponent(corpo)}`;
       window.location.href = mailtoLink;
+      
+      // Chiusura di tutte le modali coinvolte
       document.getElementById("privacyPopup").style.display = "none";
       chiudiPopupPrenotazione();
+      chiudiPopupDisdetta();
+
+      // Reset della casella privacy per gli utilizzi successivi
+      privacyCheckbox.checked = false;
+      privacyBtn.disabled = true;
+      privacyBtn.style.opacity = "0.5";
+
       alert("Email composta con successo! Ora completa l'invio nell'app email.");
     }
   
-
   </script>
 </body>
 </html>
