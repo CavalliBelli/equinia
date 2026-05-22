@@ -343,9 +343,9 @@
     const oggi = new Date();
     const giorniRimasti = Math.ceil((scadenza - oggi) / (1000 * 60 * 60 * 24));
   
-    if (giorniRimasti <= 30 && giorniRimasti > 0) {
+    if (giorniRimasti <= 45 && giorniRimasti > 0) {
       document.getElementById("scadenzaMessaggio").innerText =
-        `Il tuo abbonamento scade tra ${giorniRimasti} giorni (il ${scadenza.toLocaleDateString('it-IT')}).\nRicordati di rinnovarlo!`;
+        `Il tuo abbonamento scade tra ${giorniRimasti} giorni (il ${scadenza.toLocaleDateString('it-IT')}).`;
       document.getElementById("scadenzaPopup").style.display = "flex";
     } else if (giorniRimasti <= 0) {
       document.getElementById("scadenzaMessaggio").innerText =
