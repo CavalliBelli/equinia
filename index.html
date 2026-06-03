@@ -92,7 +92,6 @@
   <h2>Il tuo abbonamento è ora anche digitale!</h2>
   <p id="totCrocetteText">Crocette totali: 0</p>
   <p>
-    <!-- FUTURO AGGIORNAMENTO: sostituire onclick="apriStorico()" con onclick="apriMenuStorico()" quando si attiva la funzione cancella storico -->
     <a href="#" onclick="apriStorico()"
        style="color:#6a0dad; text-decoration:underline; font-size:16px;">
       📋 Storico
@@ -209,44 +208,6 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════
-       FUTURO AGGIORNAMENTO — CANCELLA STORICO
-       Per attivare:
-         1. Rimuovi i commenti da questi tre popup qui sotto
-         2. Rimuovi i commenti dalle funzioni JS in fondo
-         3. Nel link "📋 Storico" in alto, cambia
-            onclick="apriStorico()"
-            con
-            onclick="apriMenuStorico()"
-       ═══════════════════════════════════════════════════════ -->
-
-  <!-- POPUP MENU STORICO — rimuovi il commento per attivare
-  <div id="menuStoricoPopup" class="modal">
-    <div class="modal-box">
-      <h3>📋 Storico</h3>
-      <button onclick="apriStoricoVero()" style="background-color: #6a0dad;">👁️ Visualizza Storico</button>
-      <button onclick="apriConfermaCancel()" style="background-color: #dc3545;">🗑️ Cancella Storico</button>
-      <button onclick="document.getElementById('menuStoricoPopup').style.display='none'" style="background-color: #6c757d;">Annulla</button>
-    </div>
-  </div>
-  -->
-
-  <!-- POPUP CONFERMA CANCELLAZIONE STORICO — rimuovi il commento per attivare
-  <div id="confermaStoricoPopup" class="modal">
-    <div class="modal-box">
-      <h3>⚠️ Sei sicuro?</h3>
-      <p style="font-size:15px; text-align:left;">
-        Sei sicuro di voler cancellare lo storico?<br>
-        <b>Attenzione, è un'azione irreversibile.</b>
-      </p>
-      <div class="btn-row">
-        <button onclick="cancellaStorico()" style="background-color: #dc3545;">Sì, cancella</button>
-        <button onclick="document.getElementById('confermaStoricoPopup').style.display='none'" style="background-color: #6c757d;">No</button>
-      </div>
-    </div>
-  </div>
-  -->
-
   <!-- POPUP SCADENZA -->
   <div id="scadenzaPopup" class="modal">
     <div class="modal-box">
@@ -282,13 +243,13 @@
     // Per il test → 1 giorno
     // Quando funziona tutto → cambia a 90 (3 mesi)
     // ─────────────────────────────────────────
-    const DURATA_ABBONAMENTO_GIORNI = 1;   // ← cambia a 90 per la produzione
+    const DURATA_ABBONAMENTO_GIORNI = 90;   // ← cambia a 90 per la produzione
     const GIORNI_AVVISO_SCADENZA = 14;
 
     // ─────────────────────────────────────────
     // HASH SHA-256 DELLE PASSWORD
     // ─────────────────────────────────────────
-    const HASH_LOGIN = "4cf5a0b4d3e86fe85ac53919f509042af9ed35e0fc6c95ec6d35f0b37978dda8";
+    const HASH_LOGIN = "07ab59f4731b0790d0acfded6a52d2c53e7e3c6a1e241f6dfe3a41f3072e07fb";
     const HASH_DEL   = "99c07b61fbe08680fb027342e38de774b173c3f8b6a141fa287c6635e80daf28";
 
     // ─────────────────────────────────────────
@@ -328,6 +289,7 @@
       });
 
       aggiornaBarra();
+      // NOTA: controllaScadenza() viene chiamata DOPO il login, non qui
     });
 
     // ─────────────────────────────────────────
@@ -339,7 +301,7 @@
       if (hash === HASH_LOGIN) {
         document.getElementById("loginPopup").style.display = "none";
         document.getElementById("loginPwInput").value = "";
-        controllaScadenza();
+        controllaScadenza(); // ← controlla la scadenza subito dopo il login
       } else {
         alert("Password errata!");
       }
@@ -348,9 +310,10 @@
     // ─────────────────────────────────────────
     // SCADENZA ABBONAMENTO
     // ─────────────────────────────────────────
+
     function controllaScadenza() {
       const dataInizio = localStorage.getItem("data_inizio_abb");
-      if (!dataInizio || totCrocette === 0) return;
+      if (!dataInizio || totCrocette === 0) return; // nessun abbonamento attivo
 
       const inizio = new Date(dataInizio);
       const scadenza = new Date(inizio);
@@ -364,6 +327,7 @@
       const dataFormattata = scadenza.toLocaleDateString('it-IT');
 
       if (giorniRimasti <= 0) {
+        // Abbonamento scaduto → reset automatico
         totCrocette = 0;
         localStorage.setItem('tot_crocette', 0);
         localStorage.removeItem('data_inizio_abb');
@@ -374,6 +338,7 @@
           `Il tuo abbonamento è scaduto il ${dataFormattata}.\nLe crocette sono state azzerate.\n\nAggiungi una crocetta per iniziare un nuovo abbonamento.`;
         document.getElementById("scadenzaPopup").style.display = "flex";
       } else if (giorniRimasti <= GIORNI_AVVISO_SCADENZA) {
+        // Abbonamento in scadenza → avviso
         document.getElementById("scadenzaTitolo").innerText = "⚠️ Abbonamento in scadenza";
         document.getElementById("scadenzaMessaggio").innerText =
           `Il tuo abbonamento scade il ${dataFormattata}.\nHai ancora ${giorniRimasti} giorno/i.`;
@@ -408,32 +373,6 @@
       document.getElementById("storicoPopup").style.display = "flex";
     }
 
-    // ═══════════════════════════════════════════════════════
-    // FUTURO AGGIORNAMENTO — funzioni cancella storico
-    // Per attivare: rimuovi il commento da questo blocco
-    // ═══════════════════════════════════════════════════════
-    /*
-    function apriMenuStorico() {
-      document.getElementById("menuStoricoPopup").style.display = "flex";
-    }
-
-    function apriStoricoVero() {
-      document.getElementById("menuStoricoPopup").style.display = "none";
-      apriStorico();
-    }
-
-    function apriConfermaCancel() {
-      document.getElementById("menuStoricoPopup").style.display = "none";
-      document.getElementById("confermaStoricoPopup").style.display = "flex";
-    }
-
-    function cancellaStorico() {
-      localStorage.removeItem("storico");
-      document.getElementById("confermaStoricoPopup").style.display = "none";
-      alert("Storico cancellato con successo.");
-    }
-    */
-
     // ─────────────────────────────────────────
     // CROCETTE
     // ─────────────────────────────────────────
@@ -458,6 +397,7 @@
 
       if (totCrocette + qta <= 10) {
         if (totCrocette === 0) {
+          // Prima crocetta → parte un nuovo abbonamento
           localStorage.setItem("data_inizio_abb", new Date().toISOString());
           aggiungiStorico("🔄 Nuovo abbonamento iniziato");
         }
@@ -466,7 +406,7 @@
       } else {
         if (confirm(`Supereresti 10. Vuoi realizzare un nuovo abbonamento?`)) {
           totCrocette = (totCrocette + qta) - 10;
-          localStorage.setItem("data_inizio_abb", new Date().toISOString());
+          localStorage.setItem("data_inizio_abb", new Date().toISOString()); // ← nuova scadenza
           aggiungiStorico("🔄 Nuovo abbonamento iniziato");
           aggiungiStorico(`➕ Aggiunta ${qta} crocetta/e`);
         }
