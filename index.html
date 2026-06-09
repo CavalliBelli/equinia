@@ -246,11 +246,9 @@
     const DURATA_ABBONAMENTO_GIORNI = 90;   // ← cambia a 90 per la produzione
     const GIORNI_AVVISO_SCADENZA = 14;
 
-    // ─────────────────────────────────────────
-    // HASH SHA-256 DELLE PASSWORD
-    // ─────────────────────────────────────────
-    const HASH_LOGIN = "07ab59f4731b0790d0acfded6a52d2c53e7e3c6a1e241f6dfe3a41f3072e07fb";
-    const HASH_DEL   = "99c07b61fbe08680fb027342e38de774b173c3f8b6a141fa287c6635e80daf28";
+    
+    const l0g = "07ab59f4731b0790d0acfded6a52d2c53e7e3c6a1e241f6dfe3a41f3072e07fb";
+    const d3l   = "99c07b61fbe08680fb027342e38de774b173c3f8b6a141fa287c6635e80daf28";
 
     // ─────────────────────────────────────────
     // UTILITY: calcola hash SHA-256 di una stringa
@@ -298,7 +296,7 @@
     async function _0xa1b2() {
       const pw = document.getElementById("loginPwInput").value.trim();
       const hash = await hashPassword(pw);
-      if (hash === HASH_LOGIN) {
+      if (hash === l0g) {
         document.getElementById("loginPopup").style.display = "none";
         document.getElementById("loginPwInput").value = "";
         controllaScadenza(); // ← controlla la scadenza subito dopo il login
@@ -429,7 +427,7 @@
     async function confermaPassword() {
       const pw = document.getElementById("pwInput").value.trim();
       const hash = await hashPassword(pw);
-      if (hash === HASH_DEL) {
+      if (hash === HASH_d3l) {
         chiudiPopupPassword();
         eliminaCrocetteConfermata();
       } else {
