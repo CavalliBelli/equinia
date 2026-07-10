@@ -89,6 +89,26 @@
     </div>
   </div>
 
+  <!-- POPUP TUTORIAL -->
+<div id="tutorialPopup" class="modal">
+  <div class="modal-box">
+    <div id="tutorialDots" style="display:flex; justify-content:center; gap:6px; margin-bottom:16px;"></div>
+    <div id="tutorialEmoji" style="font-size:40px; margin-bottom:10px;"></div>
+    <h3 id="tutorialTitle" style="color:#6a0dad; margin-bottom:10px;"></h3>
+    <p id="tutorialDesc" style="font-size:14px; color:#444; line-height:1.5; margin-bottom:18px; text-align:left;"></p>
+    <div style="display:flex; gap:8px; justify-content:center;">
+      <button id="tutorialBtnSkip" onclick="chiudiTutorial()"
+              style="background:white; color:#6a0dad; border:1px solid #6a0dad; width:auto;">
+        Salta
+      </button>
+      <button id="tutorialBtnNext" onclick="avantiTutorial()"
+              style="width:auto;">
+        Avanti →
+      </button>
+    </div>
+  </div>
+</div>
+
   <h2>Il tuo abbonamento è ora anche digitale!</h2>
   <p id="totCrocetteText">Crocette totali: 0</p>
   <p>
@@ -285,11 +305,16 @@
         localStorage.setItem("pwa_installed", "true");
         document.getElementById("installLink").style.display = "none";
       });
-
+    // Mostra tutorial solo al primo accesso
+      if (!localStorage.getItem("tutorial_visto")) {
+        tutorialStep = 0;
+        renderTutorial();
+        document.getElementById("tutorialPopup").style.display = "flex";
+      }
       aggiornaBarra();
       // NOTA: controllaScadenza() viene chiamata DOPO il login, non qui
     });
-
+  
     // ─────────────────────────────────────────
     // LOGIN
     // ─────────────────────────────────────────
@@ -350,6 +375,88 @@
     function chiudiUpdatePopup() {
       document.getElementById("updatePopup").style.display = "none";
     }
+
+    // ─────────────────────────────────────────
+// TUTORIAL
+// ─────────────────────────────────────────
+const tutorialSteps = [
+  {
+    emoji: "🐴",
+    title: "Benvenuto in Equinia!",
+    desc: "Questa app sostituisce la tua scheda abbonamento cartacea. Ecco una breve guida su come usarla."
+  },
+  {
+    emoji: "✅",
+    title: "Le crocette",
+    desc: "Ogni abbonamento è composto da 10 crocette. Ogni lezione corrisponde a una crocetta. Quando arrivi a 10, l'abbonamento si rinnova!"
+  },
+  {
+    emoji: "➕",
+    title: "Aggiungi crocette",
+    desc: "Premi il pulsante \"Aggiungi Crocette\" per registrare una o più lezioni effettuate."
+  },
+  {
+    emoji: "🗑️",
+    title: "Elimina crocette",
+    desc: "Se serve correggere un errore, l'istruttrice può eliminare crocette tramite un'apposita password."
+  },
+  {
+    emoji: "📋",
+    title: "Storico",
+    desc: "Puoi vedere tutte le operazioni effettuate toccando \"📋 Storico\" sotto al contatore."
+  },
+  {
+    emoji: "⚠️",
+    title: "Scadenza abbonamento",
+    desc: "L'app ti avviserà automaticamente quando mancano 30 giorni alla scadenza del tuo abbonamento (3 mesi dall'inizio)."
+  },
+  {
+    emoji: "📲",
+    title: "Installa l'app!",
+    desc: "Per usarla comodamente, installala sul tuo telefono! Trovi le istruzioni nel link \"Come installare l'app\"."
+  }
+];
+
+let tutorialStep = 0;
+
+function renderTutorial() {
+  const s = tutorialSteps[tutorialStep];
+  document.getElementById("tutorialEmoji").textContent = s.emoji;
+  document.getElementById("tutorialTitle").textContent = s.title;
+  document.getElementById("tutorialDesc").textContent = s.desc;
+
+  const dotsEl = document.getElementById("tutorialDots");
+  dotsEl.innerHTML = "";
+  tutorialSteps.forEach((_, i) => {
+    const d = document.createElement("div");
+    d.style.cssText = `width:8px; height:8px; border-radius:50%; background:${i === tutorialStep ? "#6a0dad" : "#ddd"};`;
+    dotsEl.appendChild(d);
+  });
+
+  const btnNext = document.getElementById("tutorialBtnNext");
+  const btnSkip = document.getElementById("tutorialBtnSkip");
+  if (tutorialStep === tutorialSteps.length - 1) {
+    btnNext.textContent = "Ho capito! 🎉";
+    btnSkip.style.display = "none";
+  } else {
+    btnNext.textContent = "Avanti →";
+    btnSkip.style.display = "inline-block";
+  }
+}
+
+function avantiTutorial() {
+  if (tutorialStep < tutorialSteps.length - 1) {
+    tutorialStep++;
+    renderTutorial();
+  } else {
+    chiudiTutorial();
+  }
+}
+
+function chiudiTutorial() {
+  document.getElementById("tutorialPopup").style.display = "none";
+  localStorage.setItem("tutorial_visto", "true");
+}
 
     // ─────────────────────────────────────────
     // STORICO
