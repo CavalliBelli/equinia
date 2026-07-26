@@ -534,7 +534,7 @@ function chiudiTutorial() {
     async function confermaPassword() {
       const pw = document.getElementById("pwInput").value.trim();
       const hash = await hashPassword(pw);
-      if (hash === HASH_d3l) {
+      if (hash === d3l) {
         chiudiPopupPassword();
         eliminaCrocetteConfermata();
       } else {
