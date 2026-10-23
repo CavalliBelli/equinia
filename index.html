@@ -145,11 +145,12 @@
   <div id="sceltaAzionePopup" class="modal">
     <div class="modal-box">
       <h3>Cosa desideri fare?</h3>
-      <div class="btn-row">
-        <button onclick="scegliAzione('prenota')" style="background-color: #28a745;">Proponi Date</button>
-        <button onclick="scegliAzione('disdici')" style="background-color: #dc3545;">Disdici Lezione</button>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+        <button onclick="scegliAzione('prenota')" style="background-color: #28a745; margin:0; width:100%;">1. Proponi Date (Invia email)</button>
+        <button onclick="scegliAzione('registra')" style="background-color: #007bff; margin:0; width:100%;">2. Registra Date Confermate</button>
+        <button onclick="scegliAzione('disdici')" style="background-color: #dc3545; margin:0; width:100%;">3. Gestisci / Disdici Lezione</button>
       </div>
-      <button onclick="document.getElementById('sceltaAzionePopup').style.display='none'" style="background-color: #6c757d;">Annulla</button>
+      <button onclick="document.getElementById('sceltaAzionePopup').style.display='none'" style="background-color: #6c757d; margin-top: 10px; width:100%;">Annulla</button>
     </div>
   </div>
 
@@ -248,6 +249,37 @@
         finché non compare il simbolo di ricarica.
       </p>
       <button onclick="chiudiUpdatePopup()" style="background-color:#6a0dad;">Ok</button>
+    </div>
+  </div>
+
+  <!-- POPUP REGISTRA LEZIONI CONFERMATE -->
+  <div id="registraLezioniPopup" class="modal">
+    <div class="modal-box">
+      <h3>Registra Lezioni Confermate</h3>
+      <p style="font-size:13px; color:#555; text-align:left; margin-bottom:10px;">
+        Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
+      </p>
+      <div id="containerDateConfermate" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; margin-bottom: 10px;">
+        <!-- Campo data/ora iniziale -->
+        <input type="datetime-local" class="inputDataConfermata" style="width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
+      </div>
+      <button onclick="aggiungiCampoDataConfermata()" style="background-color: #6c757d; font-size: 14px; padding: 6px 10px; margin-bottom: 5px;">➕ Aggiungi un'altra data</button>
+      <button onclick="salvaLezioniConfermate()" style="background-color: #28a745;">Salva lezioni</button>
+      <button onclick="chiudiRegistraLezioni()" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
+  
+  <!-- POPUP GESTIONE / DISDETTA LEZIONI CONFERMATE -->
+  <div id="gestioneLezioniPopup" class="modal">
+    <div class="modal-box">
+      <h3>Le tue Lezioni Fissate</h3>
+      <p style="font-size:13px; color:#555; text-align:left; margin-bottom:10px;">
+        Qui vedi le lezioni confermate. Puoi disdirle (attenzione alla regola delle 24h).
+      </p>
+      <div id="listaLezioniFissate" style="text-align:left; font-size:14px; max-height:200px; overflow-y:auto; margin-bottom:10px;">
+        <!-- Verrà popolato dinamicamente via JavaScript -->
+      </div>
+      <button onclick="document.getElementById('gestioneLezioniPopup').style.display='none'" style="background-color: #6c757d;">Chiudi</button>
     </div>
   </div>
 
@@ -654,6 +686,115 @@ function chiudiTutorial() {
       alert("Email composta con successo! Ora completa l'invio nell'app email.");
     }
 
+    // ─────────────────────────────────────────
+    // GESTIONE LEZIONI CONFERMATE E REGOLA 24H
+    // ─────────────────────────────────────────
+
+    function scegliAzione(azione) {
+      document.getElementById("sceltaAzionePopup").style.display = "none";
+      if (azione === 'prenota') {
+        document.getElementById("prenotaPopup").style.display = "flex";
+      } else if (azione === 'registra') {
+        document.getElementById("containerDateConfermate").innerHTML = 
+          '<input type="datetime-local" class="inputDataConfermata" style="width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">';
+        document.getElementById("registraLezioniPopup").style.display = "flex";
+      } else if (azione === 'disdici') {
+        apriGestioneLezioniFissate();
+      }
+    }
+
+    function chiudiRegistraLezioni() {
+      document.getElementById("registraLezioniPopup").style.display = "none";
+    }
+
+    function aggiungiCampoDataConfermata() {
+      const container = document.getElementById("containerDateConfermate");
+      const input = document.createElement("input");
+      input.type = "datetime-local";
+      input.className = "inputDataConfermata";
+      input.style.cssText = "width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px; margin-top: 5px;";
+      container.appendChild(input);
+    }
+
+    function salvaLezioniConfermate() {
+      const inputs = document.querySelectorAll(".inputDataConfermata");
+      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      let quanteAggiunte = 0;
+
+      inputs.forEach(input => {
+        if (input.value) {
+          lezioni.push({
+            id: Date.now() + Math.random(),
+            dataOra: input.value
+          });
+          quanteAggiunte++;
+        }
+      });
+
+      if (quanteAggiunte === 0) {
+        alert("Seleziona almeno una data e un orario.");
+        return;
+      }
+
+      localStorage.setItem("lezioni_confermate", JSON.stringify(lezioni));
+      aggiungiStorico(`📅 Registrata/e ${quanteAggiunte} lezione/i confermata/e`);
+      alert(`Salvate con successo ${quanteAggiunte} lezione/i confermata/e!`);
+      chiudiRegistraLezioni();
+    }
+
+    function apriGestioneLezioniFissate() {
+      const lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      const listaEl = document.getElementById("listaLezioniFissate");
+
+      if (lezioni.length === 0) {
+        listaEl.innerHTML = "<p>Nessuna lezione confermata salvata al momento.</p>";
+      } else {
+        listaEl.innerHTML = lezioni.map((l, index) => {
+          const dataFormattata = new Date(l.dataOra).toLocaleString('it-IT', {
+            dateStyle: 'short',
+            timeStyle: 'short'
+          });
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px;">
+              <span>🐴 ${dataFormattata}</span>
+              <button onclick="tentaDisdettaLezione('${l.id}')" style="background-color:#dc3545; font-size:12px; padding:6px 10px; margin:0;">Disdici</button>
+            </div>
+          `;
+        }).join('');
+      }
+      document.getElementById("gestioneLezioniPopup").style.display = "flex";
+    }
+
+    function tentaDisdettaLezione(id) {
+      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      const lezione = lezioni.find(l => l.id == id);
+      if (!lezione) return;
+
+      const oraLezione = new Date(lezione.dataOra).getTime();
+      const oraAttuale = new Date().getTime();
+      const diffOre = (oraLezione - oraAttuale) / (1000 * 60 * 60);
+
+      if (diffOre < 24) {
+        alert("⚠️ Non puoi più disdire perché mancano meno di 24 ore all'inizio della lezione!");
+        return;
+      }
+
+      // Se mancano più di 24 ore, procediamo alla cancellazione e apriamo la mail di disdetta
+      if (confirm("Mancano più di 24 ore. Vuoi procedere con la disdetta di questa lezione?")) {
+        lezioni = lezioni.filter(l => l.id != id);
+        localStorage.setItem("lezioni_confermate", JSON.stringify(lezioni));
+        
+        aggiungiStorico(`❌ Disdetta lezione del ${new Date(lezione.dataOra).toLocaleDateString('it-IT')}`);
+        
+        // Apre la mail di disdetta precompilata
+        const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20=");
+        const mailtoLink = `mailto:${_3m41}?subject=${encodeURIComponent("Disdetta Lezione - " + new Date(lezione.dataOra).toLocaleString('it-IT'))}&body=${encodeURIComponent("Desidero disdire la lezione fissata per il: " + new Date(lezione.dataOra).toLocaleString('it-IT'))}`;
+        window.location.href = mailtoLink;
+
+        apriGestioneLezioniFissate(); // Aggiorna la lista nel popup
+      }
+    }
+    
   </script>
 </body>
 </html>
