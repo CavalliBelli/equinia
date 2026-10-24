@@ -132,6 +132,16 @@
   <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
   <button onclick="apriSceltaAzione()" style="background-color: #28a745;">📅 Gestisci Lezione (Prenota/Disdici)</button>
 
+  <!-- POPUP PASSWORD ELIMINAZIONE CROCETTE -->
+  <div id="pwPopup" class="modal">
+    <div class="modal-box">
+      <h3>Inserisci password</h3>
+      <input id="pwInput" type="password" placeholder="Password">
+      <button onclick="confermaPassword()">Conferma</button>
+      <button onclick="chiudiPopupPassword()" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
+  
   <!-- POPUP SCELTA AZIONE -->
   <div id="sceltaAzionePopup" class="modal">
     <div class="modal-box">
