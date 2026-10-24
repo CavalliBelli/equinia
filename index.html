@@ -317,12 +317,71 @@
     // ─────────────────────────────────────────
     // INIZIALIZZAZIONE
     // ─────────────────────────────────────────
-    document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
       const savedVersion = localStorage.getItem("app_version");
       if (savedVersion && savedVersion !== APP_VERSION) {
         document.getElementById("updatePopup").style.display = "flex";
       }
       localStorage.setItem("app_version", APP_VERSION);
+
+      // ── CONTROLLO AUTOMATICO 24H E PULIZIA ALL'AVVIO ──
+      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      const oraAttuale = new Date().getTime();
+      let lezioniAggiornate = [];
+      let crocetteAggiunte = 0;
+
+      lezioni.forEach(l => {
+        const oraLezione = new Date(l.dataOra).getTime();
+        const diffOre = (oraLezione - oraAttuale) / (1000 * 60 * 60);
+
+        if (oraLezione < oraAttuale) {
+          // Passata: viene pulita automaticamente
+          return;
+        } else if (diffOre <= 24) {
+          // Mancano meno di 24h: scatta la crocetta automatica e non è più disdicibile
+          let crocette = parseInt(localStorage.getItem("tot_crocette") || "0") + 1;
+          localStorage.setItem("tot_crocette", crocette.toString());
+          
+          const dataFormattata = new Date(l.dataOra).toLocaleDateString('it-IT');
+          aggiungiStorico(`❌ Mancate 24h per la lezione del ${dataFormattata}: +1 crocetta automatica`);
+          crocetteAggiunte++;
+        } else {
+          // Mancano più di 24h: rimane attiva e disdicibile
+          lezioniAggiornate.push(l);
+        }
+      });
+
+      localStorage.setItem("lezioni_confermate", JSON.stringify(lezioniAggiornate));
+      if (crocetteAggiunte > 0) {
+        totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
+        aggiornaBarra();
+      }
+      // ─────────────────────────────────────────────────
+
+      const check = document.getElementById("privacyCheck");
+      const btn = document.getElementById("privacyAcceptBtn");
+      check.addEventListener("change", () => {
+        btn.disabled = !check.checked;
+        btn.style.opacity = check.checked ? "1" : "0.5";
+      });
+
+      if (localStorage.getItem("pwa_installed") === "true") {
+        document.getElementById("installLink").style.display = "none";
+      }
+      window.addEventListener("appinstalled", () => {
+        localStorage.setItem("pwa_installed", "true");
+        document.getElementById("installLink").style.display = "none";
+      });
+
+      // Mostra tutorial solo al primo accesso
+      if (!localStorage.getItem("tutorial_visto")) {
+        tutorialStep = 0;
+        renderTutorial();
+        document.getElementById("tutorialPopup").style.display = "flex";
+      }
+      aggiornaBarra();
+    });
+          
 
       const check = document.getElementById("privacyCheck");
       const btn = document.getElementById("privacyAcceptBtn");
