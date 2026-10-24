@@ -76,7 +76,6 @@
       flex: 1;
       margin-top: 0;
     }
-    
   </style>
 </head>
 <body>
@@ -91,24 +90,24 @@
   </div>
 
   <!-- POPUP TUTORIAL -->
-<div id="tutorialPopup" class="modal">
-  <div class="modal-box">
-    <div id="tutorialDots" style="display:flex; justify-content:center; gap:6px; margin-bottom:16px;"></div>
-    <div id="tutorialEmoji" style="font-size:40px; margin-bottom:10px;"></div>
-    <h3 id="tutorialTitle" style="color:#6a0dad; margin-bottom:10px;"></h3>
-    <p id="tutorialDesc" style="font-size:14px; color:#444; line-height:1.5; margin-bottom:18px; text-align:left;"></p>
-    <div style="display:flex; gap:8px; justify-content:center;">
-      <button id="tutorialBtnSkip" onclick="chiudiTutorial()"
-              style="background:white; color:#6a0dad; border:1px solid #6a0dad; width:auto;">
-        Salta
-      </button>
-      <button id="tutorialBtnNext" onclick="avantiTutorial()"
-              style="width:auto;">
-        Avanti →
-      </button>
+  <div id="tutorialPopup" class="modal">
+    <div class="modal-box">
+      <div id="tutorialDots" style="display:flex; justify-content:center; gap:6px; margin-bottom:16px;"></div>
+      <div id="tutorialEmoji" style="font-size:40px; margin-bottom:10px;"></div>
+      <h3 id="tutorialTitle" style="color:#6a0dad; margin-bottom:10px;"></h3>
+      <p id="tutorialDesc" style="font-size:14px; color:#444; line-height:1.5; margin-bottom:18px; text-align:left;"></p>
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <button id="tutorialBtnSkip" onclick="chiudiTutorial()"
+                style="background:white; color:#6a0dad; border:1px solid #6a0dad; width:auto;">
+          Salta
+        </button>
+        <button id="tutorialBtnNext" onclick="avantiTutorial()"
+                style="width:auto;">
+          Avanti →
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
   <h2>Il tuo abbonamento è ora anche digitale!</h2>
   <p id="totCrocetteText">Crocette totali: 0</p>
@@ -147,118 +146,8 @@
     <div class="modal-box">
       <h3>Cosa desideri fare?</h3>
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-        <button onclick="scegliAzione('prenota')" style="background-color: #28a745; margin:0; width:100%;">1. Proponi Date (Invia email)</button>
-        <button onclick="scegliAzione('registra')" style="background-color: #007bff; margin:0; width:100%;">2. Registra Date Confermate</button>
-        <button onclick="scegliAzione('disdici')" style="background-color: #dc3545; margin:0; width:100%;">3. Gestisci / Disdici Lezione</button>
-      </div>
-      <button onclick="document.getElementById('sceltaAzionePopup').style.display='none'" style="background-color: #6c757d; margin-top: 10px; width:100%;">Annulla</button>
-    </div>
-  </div>
-
-  <!-- POPUP PRENOTA LEZIONE -->
-  <div id="prenotaPopup" class="modal">
-    <div class="modal-box">
-      <h3>Proponi Date</h3>
-      <input id="nomeInput" type="text" placeholder="Inserisci qui il tuo Nome e Cognome">
-      <input id="emailInput" type="email" placeholder="Inserisci qui la tua Email">
-      <input id="dateInput" type="text" placeholder="Inserisci qui le date. Es: 01/01, 03/01">
-      <button onclick="inviaPrenotazione()" style="background-color: #28a745;">Conferma dati</button>
-      <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
-    </div>
-  </div>
-
-  <!-- POPUP DISDICI LEZIONE -->
-  <div id="disdiciPopup" class="modal">
-    <div class="modal-box">
-      <h3>Disdici Lezione</h3>
-      <input id="nomeDisdettaInput" type="text" placeholder="Inserisci qui il tuo Nome e Cognome">
-      <input id="emailDisdettaInput" type="email" placeholder="Inserisci qui la tua Email">
-      <input id="dateDisdettaInput" type="text" placeholder="Inserisci data da disdire. Es: 01/01">
-      <button onclick="inviaDisdetta()" style="background-color: #dc3545;">Conferma dati</button>
-      <button onclick="chiudiPopupDisdetta()" style="background-color: #6c757d;">Annulla</button>
-    </div>
-  </div>
-
-  <!-- POPUP PRIVACY -->
-  <div id="privacyPopup" class="modal">
-    <div class="modal-box">
-      <h3>Informativa Privacy</h3>
-      <p style="font-size: 14px; text-align: left;">
-        I dati personali inseriti (nome, cognome ed email) vengono utilizzati esclusivamente per gestire la prenotazione delle lezioni.
-        Non vengono ceduti a terzi, non vengono usati per finalità commerciali e rimangono memorizzati solo sul dispositivo dell'utente.
-        L'invio dell'email comporta la comunicazione dei dati al solo indirizzo dell'istruttrice ai fini organizzativi.
-      </p>
-      <label style="display:flex; align-items:center; gap:8px; margin:10px 0;">
-        <input type="checkbox" id="privacyCheck">
-        <span style="font-size:14px;">Ho letto e accetto l'informativa</span>
-      </label>
-      <button id="privacyAcceptBtn" onclick="accettaPrivacy()" disabled style="background-color: #28a745; opacity: 0.5;">
-        Continua con invio email
-      </button>
-      <button onclick="chiudiPrivacy()" style="background-color: #6c757d;">Annulla</button>
-    </div>
-  </div>
-
-  <!-- POPUP INSTALL APP -->
-  <div id="installPopup" class="modal">
-    <div class="modal-box">
-      <h3>Installa l'app</h3>
-      <p style="font-size:18px; text-align:left;">
-        Puoi installare questo sito come app sul tuo telefono!
-        <br><br>
-        <b>📱 Se usi Chrome:</b><br>
-        Premi i tre puntini in alto a destra → <i>Aggiungi a schermata Home</i>.<br>
-        Ti verrà chiesto se vuoi:<br>
-        • <i>Crea scorciatoia</i> → aggiunge solo l'icona<br>
-        • <i>Installa</i> → installa la vera app<br>
-        Consigliamo <b>Installa</b>.
-        <br><br>
-        <b>🍎 Se usi Safari:</b><br>
-        Premi il tasto in basso a destra → <i>Aggiungi alla schermata Home</i> → <i>Aggiungi</i>.
-      </p>
-      <button onclick="chiudiInstallPopup()" style="background-color:#6a0dad;">Ho capito</button>
-    </div>
-  </div>
-
-  <!-- POPUP STORICO -->
-  <div id="storicoPopup" class="modal">
-    <div class="modal-box">
-      <h3>📋 Storico</h3>
-      <div id="storicoLista" style="text-align:left; font-size:14px; max-height:300px; overflow-y:auto;"></div>
-      <button onclick="document.getElementById('storicoPopup').style.display='none'"
-        style="background-color:#6a0dad;">Chiudi</button>
-    </div>
-  </div>
-
-  <!-- POPUP SCADENZA -->
-  <div id="scadenzaPopup" class="modal">
-    <div class="modal-box">
-      <h3 id="scadenzaTitolo">⚠️ Abbonamento in scadenza</h3>
-      <p id="scadenzaMessaggio" style="font-size:16px; text-align:left;"></p>
-      <button onclick="document.getElementById('scadenzaPopup').style.display='none'"
-              style="background-color:#6a0dad;">Ho capito</button>
-    </div>
-  </div>
-
-  <!-- POPUP AGGIORNAMENTO -->
-  <div id="updatePopup" class="modal">
-    <div class="modal-box">
-      <h3>Aggiornamento disponibile</h3>
-      <p style="font-size:14px; text-align:left;">
-        È stata pubblicata una nuova versione dell'app.<br><br>
-        Per aggiornare, scorri verso il basso nella schermata dell'app
-        finché non compare il simbolo di ricarica.
-      </p>
-      <button onclick="chiudiUpdatePopup()" style="background-color:#6a0dad;">Ok</button>
-    </div>
-  </div>
-
-  <!-- POPUP REGISTRA LEZIONI CONFERMATE -->
-  <div id="registraLezioniPopup" class="modal">
-    <div class="modal-box">
-      <h3>Registra Lezioni Confermate</h3>
-      <p style="font-size:13px; color:#555; text-align:left; margin-bottom:10px;">
-        Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
+        <button onclick="scegliAzione('pren
+Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
       </p>
       <div id="containerDateConfermate" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; margin-bottom: 10px;">
         <!-- Campo data/ora iniziale -->
