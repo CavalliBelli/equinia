@@ -317,7 +317,7 @@
     // ─────────────────────────────────────────
     // INIZIALIZZAZIONE
     // ─────────────────────────────────────────
-        document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
       const savedVersion = localStorage.getItem("app_version");
       if (savedVersion && savedVersion !== APP_VERSION) {
         document.getElementById("updatePopup").style.display = "flex";
