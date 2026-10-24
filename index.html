@@ -125,10 +125,10 @@
     <div class="modal-box">
       <h3>Inserisci password di login</h3>
       
-      <div class="password-wrapper" style="margin-bottom: 10px;">
-        <input id="loginPwInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter') _0xa1b2()" style="padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
-        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginPwInput', this)" title="Mostra/Nascondi password">
-          <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <div style="position: relative; width: 100%; margin-bottom: 10px;">
+        <input id="loginPwInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter') _0xa1b2()" style="width: 100%; padding: 8px; padding-right: 40px; box-sizing: border-box; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
+        <button type="button" onclick="togglePasswordVisibility('loginPwInput', this)" title="Mostra/Nascondi password" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; color: #666;">
+          <svg style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
         </button>
       </div>
 
@@ -183,10 +183,10 @@
     <div class="modal-box">
       <h3>Inserisci password</h3>
       
-      <div class="password-wrapper" style="margin-bottom: 10px;">
-        <input id="pwInput" type="password" placeholder="Password" style="padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
-        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('pwInput', this)" title="Mostra/Nascondi password">
-          <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <div style="position: relative; width: 100%; margin-bottom: 10px;">
+        <input id="pwInput" type="password" placeholder="Password" style="width: 100%; padding: 8px; padding-right: 40px; box-sizing: border-box; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
+        <button type="button" onclick="togglePasswordVisibility('pwInput', this)" title="Mostra/Nascondi password" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; color: #666;">
+          <svg style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
         </button>
       </div>
 
