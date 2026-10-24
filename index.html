@@ -67,15 +67,6 @@
       width: 100%;
       margin-top: 10px;
     }
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .btn-row button {
-      flex: 1;
-      margin-top: 0;
-    }
   </style>
 </head>
 <body>
@@ -97,14 +88,8 @@
       <h3 id="tutorialTitle" style="color:#6a0dad; margin-bottom:10px;"></h3>
       <p id="tutorialDesc" style="font-size:14px; color:#444; line-height:1.5; margin-bottom:18px; text-align:left;"></p>
       <div style="display:flex; gap:8px; justify-content:center;">
-        <button id="tutorialBtnSkip" onclick="chiudiTutorial()"
-                style="background:white; color:#6a0dad; border:1px solid #6a0dad; width:auto;">
-          Salta
-        </button>
-        <button id="tutorialBtnNext" onclick="avantiTutorial()"
-                style="width:auto;">
-          Avanti →
-        </button>
+        <button id="tutorialBtnSkip" onclick="chiudiTutorial()" style="background:white; color:#6a0dad; border:1px solid #6a0dad; width:auto;">Salta</button>
+        <button id="tutorialBtnNext" onclick="avantiTutorial()" style="width:auto;">Avanti →</button>
       </div>
     </div>
   </div>
@@ -112,19 +97,13 @@
   <h2>Il tuo abbonamento è ora anche digitale!</h2>
   <p id="totCrocetteText">Crocette totali: 0</p>
   <p>
-    <a href="#" onclick="apriStorico()"
-       style="color:#6a0dad; text-decoration:underline; font-size:16px;">
-      📋 Storico
-    </a>
+    <a href="#" onclick="apriStorico()" style="color:#6a0dad; text-decoration:underline; font-size:16px;">📋 Storico</a>
   </p>
 
   <div class="crocette-bar" id="crocetteBar"></div>
 
   <p id="installLink" style="margin-top:10px;">
-    <a href="#" onclick="document.getElementById('installPopup').style.display='flex';"
-       style="color:#6a0dad; text-decoration:underline; font-size:18px;">
-       📲 Come installare l'app
-    </a>
+    <a href="#" onclick="document.getElementById('installPopup').style.display='flex';" style="color:#6a0dad; text-decoration:underline; font-size:18px;">📲 Come installare l'app</a>
   </p>
 
   <button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
@@ -146,11 +125,82 @@
     <div class="modal-box">
       <h3>Cosa desideri fare?</h3>
       <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-        <button onclick="scegliAzione('pren
-Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
+        <button onclick="scegliAzione('prenota')" style="background-color: #28a745; margin:0; width:100%;">1. Proponi Date (Invia email)</button>
+        <button onclick="scegliAzione('registra')" style="background-color: #007bff; margin:0; width:100%;">2. Registra Date Confermate</button>
+        <button onclick="scegliAzione('disdici')" style="background-color: #dc3545; margin:0; width:100%;">3. Gestisci / Disdici Lezione</button>
+      </div>
+      <button onclick="document.getElementById('sceltaAzionePopup').style.display='none'" style="background-color: #6c757d; margin-top: 10px; width:100%;">Annulla</button>
+    </div>
+  </div>
+
+  <!-- POPUP PRENOTA LEZIONE -->
+  <div id="prenotaPopup" class="modal">
+    <div class="modal-box">
+      <h3>Proponi Date</h3>
+      <input id="nomeInput" type="text" placeholder="Inserisci qui il tuo Nome e Cognome">
+      <input id="emailInput" type="email" placeholder="Inserisci qui la tua Email">
+      <input id="dateInput" type="text" placeholder="Inserisci qui le date. Es: 01/01, 03/01">
+      <button onclick="inviaPrenotazione()" style="background-color: #28a745;">Conferma dati</button>
+      <button onclick="chiudiPopupPrenotazione()" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
+
+  <!-- POPUP PRIVACY -->
+  <div id="privacyPopup" class="modal">
+    <div class="modal-box">
+      <h3>Informativa Privacy</h3>
+      <p style="font-size: 14px; text-align: left;">
+        I dati personali inseriti vengono utilizzati esclusivamente per gestire la prenotazione delle lezioni.
       </p>
+      <label style="display:flex; align-items:center; gap:8px; margin:10px 0;">
+        <input type="checkbox" id="privacyCheck">
+        <span style="font-size:14px;">Ho letto e accetto l'informativa</span>
+      </label>
+      <button id="privacyAcceptBtn" onclick="accettaPrivacy()" disabled style="background-color: #28a745; opacity: 0.5;">Continua con invio email</button>
+      <button onclick="chiudiPrivacy()" style="background-color: #6c757d;">Annulla</button>
+    </div>
+  </div>
+
+  <!-- POPUP INSTALL APP -->
+  <div id="installPopup" class="modal">
+    <div class="modal-box">
+      <h3>Installa l'app</h3>
+      <p style="font-size:18px; text-align:left;">Puoi installare questo sito come app sul tuo telefono!</p>
+      <button onclick="chiudiInstallPopup()" style="background-color:#6a0dad;">Ho capito</button>
+    </div>
+  </div>
+
+  <!-- POPUP STORICO -->
+  <div id="storicoPopup" class="modal">
+    <div class="modal-box">
+      <h3>📋 Storico</h3>
+      <div id="storicoLista" style="text-align:left; font-size:14px; max-height:300px; overflow-y:auto;"></div>
+      <button onclick="document.getElementById('storicoPopup').style.display='none'" style="background-color:#6a0dad;">Chiudi</button>
+    </div>
+  </div>
+
+  <!-- POPUP SCADENZA -->
+  <div id="scadenzaPopup" class="modal">
+    <div class="modal-box">
+      <h3 id="scadenzaTitolo">⚠️ Abbonamento in scadenza</h3>
+      <p id="scadenzaMessaggio" style="font-size:16px; text-align:left;"></p>
+      <button onclick="document.getElementById('scadenzaPopup').style.display='none'" style="background-color:#6a0dad;">Ho capito</button>
+    </div>
+  </div>
+
+  <!-- POPUP AGGIORNAMENTO -->
+  <div id="updatePopup" class="modal">
+    <div class="modal-box">
+      <h3>Aggiornamento disponibile</h3>
+      <button onclick="chiudiUpdatePopup()" style="background-color:#6a0dad;">Ok</button>
+    </div>
+  </div>
+
+  <!-- POPUP REGISTRA LEZIONI CONFERMATE -->
+  <div id="registraLezioniPopup" class="modal">
+    <div class="modal-box">
+      <h3>Registra Lezioni Confermate</h3>
       <div id="containerDateConfermate" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; margin-bottom: 10px;">
-        <!-- Campo data/ora iniziale -->
         <input type="datetime-local" class="inputDataConfermata" style="width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
       </div>
       <button onclick="aggiungiCampoDataConfermata()" style="background-color: #6c757d; font-size: 14px; padding: 6px 10px; margin-bottom: 5px;">➕ Aggiungi un'altra data</button>
@@ -163,38 +213,19 @@ Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
   <div id="gestioneLezioniPopup" class="modal">
     <div class="modal-box">
       <h3>Le tue Lezioni Fissate</h3>
-      <p style="font-size:13px; color:#555; text-align:left; margin-bottom:10px;">
-        Qui vedi le lezioni confermate. Puoi disdirle (attenzione alla regola delle 24h).
-      </p>
-      <div id="listaLezioniFissate" style="text-align:left; font-size:14px; max-height:200px; overflow-y:auto; margin-bottom:10px;">
-        <!-- Verrà popolato dinamicamente via JavaScript -->
-      </div>
+      <div id="listaLezioniFissate" style="text-align:left; font-size:14px; max-height:200px; overflow-y:auto; margin-bottom:10px;"></div>
       <button onclick="document.getElementById('gestioneLezioniPopup').style.display='none'" style="background-color: #6c757d;">Chiudi</button>
     </div>
   </div>
 
   <script>
-
-    // ─────────────────────────────────────────
-    // VERSIONE APP
-    // ─────────────────────────────────────────
     const APP_VERSION = "1.0.0";
-
-    // ─────────────────────────────────────────
-    // DURATA ABBONAMENTO
-    // Per il test → 1 giorno
-    // Quando funziona tutto → cambia a 90 (3 mesi)
-    // ─────────────────────────────────────────
     const DURATA_ABBONAMENTO_GIORNI = 90;
     const GIORNI_AVVISO_SCADENZA = 14;
 
-    
     const l0g = "07ab59f4731b0790d0acfded6a52d2c53e7e3c6a1e241f6dfe3a41f3072e07fb";
     const d3l   = "99c07b61fbe08680fb027342e38de774b173c3f8b6a141fa287c6635e80daf28";
 
-    // ─────────────────────────────────────────
-    // UTILITY: calcola hash SHA-256 di una stringa
-    // ─────────────────────────────────────────
     async function hashPassword(pw) {
       const encoder = new TextEncoder();
       const data = encoder.encode(pw);
@@ -203,17 +234,14 @@ Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // ─────────────────────────────────────────
-    // INIZIALIZZAZIONE
-    // ─────────────────────────────────────────
-      document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
       const savedVersion = localStorage.getItem("app_version");
       if (savedVersion && savedVersion !== APP_VERSION) {
         document.getElementById("updatePopup").style.display = "flex";
       }
       localStorage.setItem("app_version", APP_VERSION);
 
-      // ── CONTROLLO AUTOMATICO 24H E PULIZIA ALL'AVVIO ──
+      // Controllo automatico 24h all'avvio
       let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
       const oraAttuale = new Date().getTime();
       let lezioniAggiornate = [];
@@ -224,100 +252,72 @@ Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
         const diffOre = (oraLezione - oraAttuale) / (1000 * 60 * 60);
 
         if (oraLezione < oraAttuale) {
-          // Passata: viene pulita automaticamente
           return;
         } else if (diffOre <= 24) {
-          // Mancano meno di 24h: scatta la crocetta automatica e non è più disdicibile
           let crocette = parseInt(localStorage.getItem("tot_crocette") || "0") + 1;
           localStorage.setItem("tot_crocette", crocette.toString());
-          
           const dataFormattata = new Date(l.dataOra).toLocaleDateString('it-IT');
           aggiungiStorico(`❌ Mancate 24h per la lezione del ${dataFormattata}: +1 crocetta automatica`);
           crocetteAggiunte++;
         } else {
-          // Mancano più di 24h: rimane attiva e disdicibile
           lezioniAggiornate.push(l);
         }
       });
 
       localStorage.setItem("lezioni_confermate", JSON.stringify(lezioniAggiornate));
+      
+      totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
+
       if (crocetteAggiunte > 0) {
-        totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
         aggiornaBarra();
       }
-      // ─────────────────────────────────────────────────
 
       const check = document.getElementById("privacyCheck");
       const btn = document.getElementById("privacyAcceptBtn");
-      check.addEventListener("change", () => {
-        btn.disabled = !check.checked;
-        btn.style.opacity = check.checked ? "1" : "0.5";
-      });
+      if (check && btn) {
+        check.addEventListener("change", () => {
+          btn.disabled = !check.checked;
+          btn.style.opacity = check.checked ? "1" : "0.5";
+        });
+      }
 
       if (localStorage.getItem("pwa_installed") === "true") {
-        document.getElementById("installLink").style.display = "none";
+        const link = document.getElementById("installLink");
+        if(link) link.style.display = "none";
       }
       window.addEventListener("appinstalled", () => {
         localStorage.setItem("pwa_installed", "true");
-        document.getElementById("installLink").style.display = "none";
+        const link = document.getElementById("installLink");
+        if(link) link.style.display = "none";
       });
 
-      // Mostra tutorial solo al primo accesso
       if (!localStorage.getItem("tutorial_visto")) {
         tutorialStep = 0;
         renderTutorial();
-        document.getElementById("tutorialPopup").style.display = "flex";
+        const tutPopup = document.getElementById("tutorialPopup");
+        if(tutPopup) tutPopup.style.display = "flex";
       }
+      
       aggiornaBarra();
-    });
-          
-
-      const check = document.getElementById("privacyCheck");
-      const btn = document.getElementById("privacyAcceptBtn");
-      check.addEventListener("change", () => {
-        btn.disabled = !check.checked;
-        btn.style.opacity = check.checked ? "1" : "0.5";
-      });
-
-      if (localStorage.getItem("pwa_installed") === "true") {
-        document.getElementById("installLink").style.display = "none";
-      }
-      window.addEventListener("appinstalled", () => {
-        localStorage.setItem("pwa_installed", "true");
-        document.getElementById("installLink").style.display = "none";
-      });
-    // Mostra tutorial solo al primo accesso
-      if (!localStorage.getItem("tutorial_visto")) {
-        tutorialStep = 0;
-        renderTutorial();
-        document.getElementById("tutorialPopup").style.display = "flex";
-      }
-      aggiornaBarra();
-      // NOTA: controllaScadenza() viene chiamata DOPO il login, non qui
     });
   
-    // ─────────────────────────────────────────
-    // LOGIN
-    // ─────────────────────────────────────────
     async function _0xa1b2() {
-      const pw = document.getElementById("loginPwInput").value.trim();
+      const inputEl = document.getElementById("loginPwInput");
+      if (!inputEl) return;
+      const pw = inputEl.value.trim();
       const hash = await hashPassword(pw);
       if (hash === l0g) {
         document.getElementById("loginPopup").style.display = "none";
-        document.getElementById("loginPwInput").value = "";
-        controllaScadenza(); // ← controlla la scadenza subito dopo il login
+        inputEl.value = "";
+        controllaScadenza();
       } else {
         alert("Password errata!");
       }
     }
 
-    // ─────────────────────────────────────────
-    // SCADENZA ABBONAMENTO
-    // ─────────────────────────────────────────
-
     function controllaScadenza() {
       const dataInizio = localStorage.getItem("data_inizio_abb");
-      if (!dataInizio || totCrocette === 0) return; // nessun abbonamento attivo
+      if (!dataInizio || totCrocette === 0) return;
 
       const inizio = new Date(dataInizio);
       const scadenza = new Date(inizio);
@@ -331,117 +331,76 @@ Inserisci qui data e ora delle lezioni che l'istruttrice ti ha confermato.
       const dataFormattata = scadenza.toLocaleDateString('it-IT');
 
       if (giorniRimasti <= 0) {
-        // Abbonamento scaduto → reset automatico
         totCrocette = 0;
         localStorage.setItem('tot_crocette', 0);
         localStorage.removeItem('data_inizio_abb');
         aggiungiStorico("❌ Abbonamento scaduto — crocette azzerate");
         aggiornaBarra();
         document.getElementById("scadenzaTitolo").innerText = "❌ Abbonamento scaduto";
-        document.getElementById("scadenzaMessaggio").innerText =
-          `Il tuo abbonamento è scaduto il ${dataFormattata}.\nLe crocette sono state azzerate.\n\nAggiungi una crocetta per iniziare un nuovo abbonamento.`;
+        document.getElementById("scadenzaMessaggio").innerText = `Il tuo abbonamento è scaduto il ${dataFormattata}.`;
         document.getElementById("scadenzaPopup").style.display = "flex";
       } else if (giorniRimasti <= GIORNI_AVVISO_SCADENZA) {
-        // Abbonamento in scadenza → avviso
         document.getElementById("scadenzaTitolo").innerText = "⚠️ Abbonamento in scadenza";
-        document.getElementById("scadenzaMessaggio").innerText =
-          `Il tuo abbonamento scade il ${dataFormattata}.\nHai ancora ${giorniRimasti} giorno/i.`;
+        document.getElementById("scadenzaMessaggio").innerText = `Il tuo abbonamento scade il ${dataFormattata}.`;
         document.getElementById("scadenzaPopup").style.display = "flex";
       }
     }
 
-    // ─────────────────────────────────────────
-    // POPUP AGGIORNAMENTO
-    // ─────────────────────────────────────────
     function chiudiUpdatePopup() {
       document.getElementById("updatePopup").style.display = "none";
     }
 
-    // ─────────────────────────────────────────
-// TUTORIAL
-// ─────────────────────────────────────────
-const tutorialSteps = [
-  {
-    emoji: "🐴",
-    title: "Benvenuto in Equinia!",
-    desc: "Questa app sostituisce la tua scheda abbonamento cartacea. Ecco una breve guida su come usarla."
-  },
-  {
-    emoji: "✅",
-    title: "Le crocette",
-    desc: "Ogni abbonamento è composto da 10 crocette. Ogni lezione corrisponde a una crocetta. Quando arrivi a 10, l'abbonamento si rinnova!"
-  },
-  {
-    emoji: "➕",
-    title: "Aggiungi crocette",
-    desc: "Premi il pulsante \"Aggiungi Crocette\" per registrare una o più lezioni effettuate."
-  },
-  {
-    emoji: "🗑️",
-    title: "Elimina crocette",
-    desc: "Se serve correggere un errore, l'istruttrice può eliminare crocette tramite un'apposita password."
-  },
-  {
-    emoji: "📋",
-    title: "Storico",
-    desc: "Puoi vedere tutte le operazioni effettuate toccando \"📋 Storico\" sotto al contatore."
-  },
-  {
-    emoji: "⚠️",
-    title: "Scadenza abbonamento",
-    desc: "L'app ti avviserà automaticamente quando mancano 30 giorni alla scadenza del tuo abbonamento (3 mesi dall'inizio)."
-  },
-  {
-    emoji: "📲",
-    title: "Installa l'app!",
-    desc: "Per usarla comodamente, installala sul tuo telefono! Trovi le istruzioni nel link \"Come installare l'app\"."
-  }
-];
+    const tutorialSteps = [
+      { emoji: "🐴", title: "Benvenuto in Equinia!", desc: "Questa app sostituisce la tua scheda abbonamento cartacea." },
+      { emoji: "✅", title: "Le crocette", desc: "Ogni abbonamento è composto da 10 crocette." },
+      { emoji: "➕", title: "Aggiungi crocette", desc: "Premi il pulsante Aggiungi Crocette." },
+      { emoji: "🗑️", title: "Elimina crocette", desc: "L'istruttrice può eliminarle con password." },
+      { emoji: "📋", title: "Storico", desc: "Controlla le operazioni." },
+      { emoji: "⚠️", title: "Scadenza", desc: "Avvisi automatici di scadenza." },
+      { emoji: "📲", title: "Installa l'app!", desc: "Installala sul telefono." }
+    ];
 
-let tutorialStep = 0;
+    let tutorialStep = 0;
 
-function renderTutorial() {
-  const s = tutorialSteps[tutorialStep];
-  document.getElementById("tutorialEmoji").textContent = s.emoji;
-  document.getElementById("tutorialTitle").textContent = s.title;
-  document.getElementById("tutorialDesc").textContent = s.desc;
+    function renderTutorial() {
+      const s = tutorialSteps[tutorialStep];
+      document.getElementById("tutorialEmoji").textContent = s.emoji;
+      document.getElementById("tutorialTitle").textContent = s.title;
+      document.getElementById("tutorialDesc").textContent = s.desc;
 
-  const dotsEl = document.getElementById("tutorialDots");
-  dotsEl.innerHTML = "";
-  tutorialSteps.forEach((_, i) => {
-    const d = document.createElement("div");
-    d.style.cssText = `width:8px; height:8px; border-radius:50%; background:${i === tutorialStep ? "#6a0dad" : "#ddd"};`;
-    dotsEl.appendChild(d);
-  });
+      const dotsEl = document.getElementById("tutorialDots");
+      dotsEl.innerHTML = "";
+      tutorialSteps.forEach((_, i) => {
+        const d = document.createElement("div");
+        d.style.cssText = `width:8px; height:8px; border-radius:50%; background:${i === tutorialStep ? "#6a0dad" : "#ddd"};`;
+        dotsEl.appendChild(d);
+      });
 
-  const btnNext = document.getElementById("tutorialBtnNext");
-  const btnSkip = document.getElementById("tutorialBtnSkip");
-  if (tutorialStep === tutorialSteps.length - 1) {
-    btnNext.textContent = "Ho capito! 🎉";
-    btnSkip.style.display = "none";
-  } else {
-    btnNext.textContent = "Avanti →";
-    btnSkip.style.display = "inline-block";
-  }
-}
+      const btnNext = document.getElementById("tutorialBtnNext");
+      const btnSkip = document.getElementById("tutorialBtnSkip");
+      if (tutorialStep === tutorialSteps.length - 1) {
+        btnNext.textContent = "Ho capito! 🎉";
+        btnSkip.style.display = "none";
+      } else {
+        btnNext.textContent = "Avanti →";
+        btnSkip.style.display = "inline-block";
+      }
+    }
 
-function avantiTutorial() {
-  if (tutorialStep < tutorialSteps.length - 1) {
-    tutorialStep++;
-    renderTutorial();
-  } else {
-    chiudiTutorial();
-  }
-}
+    function avantiTutorial() {
+      if (tutorialStep < tutorialSteps.length - 1) {
+        tutorialStep++;
+        renderTutorial();
+      } else {
+        chiudiTutorial();
+      }
+    }
 
-function chiudiTutorial() {
-  document.getElementById("tutorialPopup").style.display = "none";
-  localStorage.setItem("tutorial_visto", "true");
-}
+    function chiudiTutorial() {
+      document.getElementById("tutorialPopup").style.display = "none";
+      localStorage.setItem("tutorial_visto", "true");
+    }
 
-    // ─────────────────────────────────────────
-    // STORICO
-    // ─────────────────────────────────────────
     function aggiungiStorico(messaggio) {
       const storico = JSON.parse(localStorage.getItem("storico") || "[]");
       const data = new Date().toLocaleDateString('it-IT');
@@ -453,20 +412,17 @@ function chiudiTutorial() {
     function apriStorico() {
       const storico = JSON.parse(localStorage.getItem("storico") || "[]");
       const lista = document.getElementById("storicoLista");
-      lista.innerHTML = storico.length === 0
-        ? "<p>Nessun evento registrato.</p>"
-        : storico.map(e => `<p>• ${e}</p>`).join('');
+      lista.innerHTML = storico.length === 0 ? "<p>Nessun evento registrato.</p>" : storico.map(e => `<p>• ${e}</p>`).join('');
       document.getElementById("storicoPopup").style.display = "flex";
     }
 
-    // ─────────────────────────────────────────
-    // CROCETTE
-    // ─────────────────────────────────────────
     let totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
 
     function aggiornaBarra() {
-      document.getElementById('totCrocetteText').innerText = `Crocette totali: ${totCrocette}`;
+      const textEl = document.getElementById('totCrocetteText');
+      if(textEl) textEl.innerText = `Crocette totali: ${totCrocette}`;
       const bar = document.getElementById('crocetteBar');
+      if(!bar) return;
       bar.innerHTML = '';
       for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
@@ -483,7 +439,6 @@ function chiudiTutorial() {
 
       if (totCrocette + qta <= 10) {
         if (totCrocette === 0) {
-          // Prima crocetta → parte un nuovo abbonamento
           localStorage.setItem("data_inizio_abb", new Date().toISOString());
           aggiungiStorico("🔄 Nuovo abbonamento iniziato");
         }
@@ -492,7 +447,7 @@ function chiudiTutorial() {
       } else {
         if (confirm(`Supereresti 10. Vuoi realizzare un nuovo abbonamento?`)) {
           totCrocette = (totCrocette + qta) - 10;
-          localStorage.setItem("data_inizio_abb", new Date().toISOString()); // ← nuova scadenza
+          localStorage.setItem("data_inizio_abb", new Date().toISOString());
           aggiungiStorico("🔄 Nuovo abbonamento iniziato");
           aggiungiStorico(`➕ Aggiunta ${qta} crocetta/e`);
         }
@@ -500,9 +455,6 @@ function chiudiTutorial() {
       aggiornaBarra();
     }
 
-    // ─────────────────────────────────────────
-    // ELIMINA CROCETTE
-    // ─────────────────────────────────────────
     function apriPopupPassword() {
       document.getElementById("pwPopup").style.display = "flex";
     }
@@ -536,241 +488,14 @@ function chiudiTutorial() {
       aggiornaBarra();
     }
 
-    // ─────────────────────────────────────────
-    // INSTALL POPUP
-    // ─────────────────────────────────────────
     function chiudiInstallPopup() {
       document.getElementById("installPopup").style.display = "none";
     }
 
-    // ─────────────────────────────────────────
-    // GESTIONE EMAIL (PRENOTAZIONE / DISDETTA)
-    // ─────────────────────────────────────────
     function apriSceltaAzione() {
       document.getElementById("sceltaAzionePopup").style.display = "flex";
     }
 
-    function scegliAzione(azione) {
-      document.getElementById("sceltaAzionePopup").style.display = "none";
-      if (azione === 'prenota') {
-        document.getElementById("prenotaPopup").style.display = "flex";
-      } else if (azione === 'disdici') {
-        document.getElementById("disdiciPopup").style.display = "flex";
-      }
-    }
-
     function chiudiPopupPrenotazione() {
       document.getElementById("prenotaPopup").style.display = "none";
-    }
-
-    function chiudiPopupDisdetta() {
-      document.getElementById("disdiciPopup").style.display = "none";
-    }
-
-    function inviaPrenotazione() {
-      const nome = document.getElementById("nomeInput").value.trim();
-      const emailUtente = document.getElementById("emailInput").value.trim();
-      const date = document.getElementById("dateInput").value.trim();
-      if (!nome || !emailUtente || !date) {
-        alert("Per favore, compila tutti i campi.");
-        return;
-      }
-      window._prenotazioneTemp = { tipo: 'prenotazione', nome, emailUtente, date };
-      document.getElementById("privacyPopup").style.display = "flex";
-    }
-
-    function inviaDisdetta() {
-      const nome = document.getElementById("nomeDisdettaInput").value.trim();
-      const emailUtente = document.getElementById("emailDisdettaInput").value.trim();
-      const date = document.getElementById("dateDisdettaInput").value.trim();
-      if (!nome || !emailUtente || !date) {
-        alert("Per favore, compila tutti i campi.");
-        return;
-      }
-      window._prenotazioneTemp = { tipo: 'disdetta', nome, emailUtente, date };
-      document.getElementById("privacyPopup").style.display = "flex";
-    }
-
-    function chiudiPrivacy() {
-      document.getElementById("privacyPopup").style.display = "none";
-    }
-
-    function accettaPrivacy() {
-      const privacyCheckbox = document.getElementById("privacyCheck");
-      const privacyBtn = document.getElementById("privacyAcceptBtn");
-
-      if (!privacyCheckbox.checked) {
-        alert("Devi accettare l'informativa per procedere.");
-        return;
-      }
-
-      const { tipo, nome, emailUtente, date } = window._prenotazioneTemp;
-      const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20=");
-
-      let oggetto = "";
-      let corpo = "";
-
-      if (tipo === 'prenotazione') {
-        oggetto = "Prenotazione Lezione - " + nome;
-        corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
-      } else if (tipo === 'disdetta') {
-        oggetto = "Disdetta Lezione - " + nome;
-        corpo = `Disdetta lezione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate da disdire: ${date}`;
-      }
-
-      const mailtoLink =
-        `mailto:${_3m41}` +
-        `?subject=${encodeURIComponent(oggetto)}` +
-        `&body=${encodeURIComponent(corpo)}`;
-      window.location.href = mailtoLink;
-
-      document.getElementById("privacyPopup").style.display = "none";
-      chiudiPopupPrenotazione();
-      chiudiPopupDisdetta();
-
-      privacyCheckbox.checked = false;
-      privacyBtn.disabled = true;
-      privacyBtn.style.opacity = "0.5";
-
-      alert("Email composta con successo! Ora completa l'invio nell'app email.");
-    }
-
-    // ─────────────────────────────────────────
-    // GESTIONE LEZIONI CONFERMATE E REGOLA 24H
-    // ─────────────────────────────────────────
-
-    function scegliAzione(azione) {
-      document.getElementById("sceltaAzionePopup").style.display = "none";
-      if (azione === 'prenota') {
-        document.getElementById("prenotaPopup").style.display = "flex";
-      } else if (azione === 'registra') {
-        document.getElementById("containerDateConfermate").innerHTML = 
-          '<input type="datetime-local" class="inputDataConfermata" style="width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">';
-        document.getElementById("registraLezioniPopup").style.display = "flex";
-      } else if (azione === 'disdici') {
-        apriGestioneLezioniFissate();
-      }
-    }
-
-    function chiudiRegistraLezioni() {
-      document.getElementById("registraLezioniPopup").style.display = "none";
-    }
-
-    function aggiungiCampoDataConfermata() {
-      const container = document.getElementById("containerDateConfermate");
-      const input = document.createElement("input");
-      input.type = "datetime-local";
-      input.className = "inputDataConfermata";
-      input.style.cssText = "width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px; margin-top: 5px;";
-      container.appendChild(input);
-    }
-
-    function salvaLezioniConfermate() {
-      const inputs = document.querySelectorAll(".inputDataConfermata");
-      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
-      let quanteAggiunte = 0;
-
-      inputs.forEach(input => {
-        if (input.value) {
-          lezioni.push({
-            id: Date.now() + Math.random(),
-            dataOra: input.value
-          });
-          quanteAggiunte++;
-        }
-      });
-
-      if (quanteAggiunte === 0) {
-        alert("Seleziona almeno una data e un orario.");
-        return;
-      }
-
-      localStorage.setItem("lezioni_confermate", JSON.stringify(lezioni));
-      aggiungiStorico(`📅 Registrata/e ${quanteAggiunte} lezione/i confermata/e`);
-      alert(`Salvate con successo ${quanteAggiunte} lezione/i confermata/e!`);
-      chiudiRegistraLezioni();
-    }
-
-    function apriGestioneLezioniFissate() {
-      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
-      const oraAttuale = new Date().getTime();
-      let lezioniAggiornate = [];
-      let crocetteAggiunte = 0;
-
-      // Controlla ogni lezione salvata
-      lezioni.forEach(l => {
-        const oraLezione = new Date(l.dataOra).getTime();
-        const diffOre = (oraLezione - oraAttuale) / (1000 * 60 * 60);
-
-        if (oraLezione < oraAttuale) {
-          // 1. La lezione è nel passato: viene pulita automaticamente dalla lista
-          return;
-        } else if (diffOre <= 24) {
-          // 2. Mancano meno di 24 ore e non è stata disdetta: scatta la crocetta automatica
-          let crocette = parseInt(localStorage.getItem("tot_crocette") || "0") + 1;
-          localStorage.setItem("tot_crocette", crocette.toString());
-          
-          const dataFormattata = new Date(l.dataOra).toLocaleDateString('it-IT');
-          aggiungiStorico(`❌ Mancate 24h per la lezione del ${dataFormattata}: +1 crocetta automatica`);
-          crocetteAggiunte++;
-          // La lezione viene rimossa dalla lista attiva
-        } else {
-          // 3. Mancano più di 24 ore: la lezione rimane valida e disdicibile nel pannello
-          lezioniAggiornate.push(l);
-        }
-      });
-
-      // Salva la lista ripulita
-      localStorage.setItem("lezioni_confermate", JSON.stringify(lezioniAggiornate));
-
-      // Se sono state aggiunte crocette in automatico, aggiorna la schermata principale se la funzione esiste
-      if (crocetteAggiunte > 0) {
-        aggiornaBarra();
-      }
-
-      // Popola il popup con le sole lezioni future disdicibili (> 24h)
-      const listaEl = document.getElementById("listaLezioniFissate");
-
-      if (lezioniAggiornate.length === 0) {
-        listaEl.innerHTML = "<p>Nessuna lezione confermata attiva al momento.</p>";
-      } else {
-        listaEl.innerHTML = lezioniAggiornate.map((l) => {
-          const dataFormattata = new Date(l.dataOra).toLocaleString('it-IT', {
-            dateStyle: 'short',
-            timeStyle: 'short'
-          });
-          return `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px;">
-              <span>🐴 ${dataFormattata}</span>
-              <button onclick="tentaDisdettaLezione('${l.id}')" style="background-color:#dc3545; font-size:12px; padding:6px 10px; margin:0;">Disdici</button>
-            </div>
-          `;
-        }).join('');
-      }
-
-      document.getElementById("gestioneLezioniPopup").style.display = "flex";
-    }
-
-    function tentaDisdettaLezione(id) {
-      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
-      const lezione = lezioni.find(l => l.id == id);
-      if (!lezione) return;
-
-      // Poiché la lista mostra solo lezioni con più di 24 ore di anticipo, la disdetta va sempre a buon fine
-      if (confirm("Mancano più di 24 ore. Vuoi procedere con la disdetta di questa lezione?")) {
-        lezioni = lezioni.filter(l => l.id != id);
-        localStorage.setItem("lezioni_confermate", JSON.stringify(lezioni));
-        
-        aggiungiStorico(`❌ Disdetta lezione del ${new Date(lezione.dataOra).toLocaleDateString('it-IT')}`);
-        
-        const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20=");
-        const mailtoLink = `mailto:${_3m41}?subject=${encodeURIComponent("Disdetta Lezione - " + new Date(lezione.dataOra).toLocaleString('it-IT'))}&body=${encodeURIComponent("Desidero disdire la lezione fissata per il: " + new Date(lezione.dataOra).toLocaleString('it-IT'))}`;
-        window.location.href = mailtoLink;
-
-        apriGestioneLezioniFissate(); // Aggiorna la lista nel popup
-      }
-    }
-    
-  </script>
-</body>
-</html>
+ 
