@@ -743,13 +743,49 @@ function chiudiTutorial() {
     }
 
     function apriGestioneLezioniFissate() {
-      const lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      const oraAttuale = new Date().getTime();
+      let lezioniAggiornate = [];
+      let crocetteAggiunte = 0;
+
+      // Controlla ogni lezione salvata
+      lezioni.forEach(l => {
+        const oraLezione = new Date(l.dataOra).getTime();
+        const diffOre = (oraLezione - oraAttuale) / (1000 * 60 * 60);
+
+        if (oraLezione < oraAttuale) {
+          // 1. La lezione è nel passato: viene pulita automaticamente dalla lista
+          return;
+        } else if (diffOre <= 24) {
+          // 2. Mancano meno di 24 ore e non è stata disdetta: scatta la crocetta automatica
+          let crocette = parseInt(localStorage.getItem("tot_crocette") || "0") + 1;
+          localStorage.setItem("tot_crocette", crocette.toString());
+          
+          const dataFormattata = new Date(l.dataOra).toLocaleDateString('it-IT');
+          aggiungiStorico(`❌ Mancate 24h per la lezione del ${dataFormattata}: +1 crocetta automatica`);
+          crocetteAggiunte++;
+          // La lezione viene rimossa dalla lista attiva
+        } else {
+          // 3. Mancano più di 24 ore: la lezione rimane valida e disdicibile nel pannello
+          lezioniAggiornate.push(l);
+        }
+      });
+
+      // Salva la lista ripulita
+      localStorage.setItem("lezioni_confermate", JSON.stringify(lezioniAggiornate));
+
+      // Se sono state aggiunte crocette in automatico, aggiorna la schermata principale se la funzione esiste
+      if (crocetteAggiunte > 0 && typeof aggiornaInterfaccia === 'function') {
+        aggiornaInterfaccia();
+      }
+
+      // Popola il popup con le sole lezioni future disdicibili (> 24h)
       const listaEl = document.getElementById("listaLezioniFissate");
 
-      if (lezioni.length === 0) {
-        listaEl.innerHTML = "<p>Nessuna lezione confermata salvata al momento.</p>";
+      if (lezioniAggiornate.length === 0) {
+        listaEl.innerHTML = "<p>Nessuna lezione confermata attiva al momento.</p>";
       } else {
-        listaEl.innerHTML = lezioni.map((l, index) => {
+        listaEl.innerHTML = lezioniAggiornate.map((l) => {
           const dataFormattata = new Date(l.dataOra).toLocaleString('it-IT', {
             dateStyle: 'short',
             timeStyle: 'short'
@@ -762,6 +798,7 @@ function chiudiTutorial() {
           `;
         }).join('');
       }
+
       document.getElementById("gestioneLezioniPopup").style.display = "flex";
     }
 
@@ -770,23 +807,13 @@ function chiudiTutorial() {
       const lezione = lezioni.find(l => l.id == id);
       if (!lezione) return;
 
-      const oraLezione = new Date(lezione.dataOra).getTime();
-      const oraAttuale = new Date().getTime();
-      const diffOre = (oraLezione - oraAttuale) / (1000 * 60 * 60);
-
-      if (diffOre < 24) {
-        alert("⚠️ Non puoi più disdire perché mancano meno di 24 ore all'inizio della lezione!");
-        return;
-      }
-
-      // Se mancano più di 24 ore, procediamo alla cancellazione e apriamo la mail di disdetta
+      // Poiché la lista mostra solo lezioni con più di 24 ore di anticipo, la disdetta va sempre a buon fine
       if (confirm("Mancano più di 24 ore. Vuoi procedere con la disdetta di questa lezione?")) {
         lezioni = lezioni.filter(l => l.id != id);
         localStorage.setItem("lezioni_confermate", JSON.stringify(lezioni));
         
         aggiungiStorico(`❌ Disdetta lezione del ${new Date(lezione.dataOra).toLocaleDateString('it-IT')}`);
         
-        // Apre la mail di disdetta precompilata
         const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20=");
         const mailtoLink = `mailto:${_3m41}?subject=${encodeURIComponent("Disdetta Lezione - " + new Date(lezione.dataOra).toLocaleString('it-IT'))}&body=${encodeURIComponent("Desidero disdire la lezione fissata per il: " + new Date(lezione.dataOra).toLocaleString('it-IT'))}`;
         window.location.href = mailtoLink;
