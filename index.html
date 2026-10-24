@@ -76,6 +76,46 @@
       flex: 1;
       margin-top: 0;
     }
+
+    /* Container per posizionare l'icona dentro il campo password */
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 40px !important; /* Spazio a destra per non sovrapporre il testo all'icona */
+      box-sizing: border-box;
+    }
+    
+    .toggle-password-btn {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      outline: none;
+      box-shadow: none !important;
+    }
+    
+    .toggle-password-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
   </style>
 </head>
 <body>
@@ -84,7 +124,14 @@
   <div id="loginPopup" class="modal" style="display: flex;">
     <div class="modal-box">
       <h3>Inserisci password di login</h3>
-      <input id="loginPwInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter') _0xa1b2()">
+      
+      <div class="password-wrapper" style="margin-bottom: 10px;">
+        <input id="loginPwInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter') _0xa1b2()" style="padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
+        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginPwInput', this)" title="Mostra/Nascondi password">
+          <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+      </div>
+
       <button onclick="_0xa1b2()">Accedi</button>
     </div>
   </div>
@@ -135,7 +182,14 @@
   <div id="pwPopup" class="modal">
     <div class="modal-box">
       <h3>Inserisci password</h3>
-      <input id="pwInput" type="password" placeholder="Password">
+      
+      <div class="password-wrapper" style="margin-bottom: 10px;">
+        <input id="pwInput" type="password" placeholder="Password" style="padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">
+        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('pwInput', this)" title="Mostra/Nascondi password">
+          <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
+      </div>
+
       <button onclick="confermaPassword()">Conferma</button>
       <button onclick="chiudiPopupPassword()">Annulla</button>
     </div>
@@ -820,6 +874,25 @@ function chiudiTutorial() {
 
         apriGestioneLezioniFissate(); // Aggiorna la lista nel popup
       }
+    }
+
+    // ─────────────────────────────────────────
+    // TOGGLE VISIBILITÀ PASSWORD (OCCHIOLINO SVG)
+    // ─────────────────────────────────────────
+    function togglePasswordVisibility(inputId, btnEl) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+
+      // Icona Occhio Aperto
+      const eyeOpenSVG = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+      
+      // Icona Occhio Sbarrato (Nascondi)
+      const eyeClosedSVG = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+
+      btnEl.querySelector("svg").innerHTML = isPassword ? eyeClosedSVG : eyeOpenSVG;
     }
     
   </script>
