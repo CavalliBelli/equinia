@@ -132,15 +132,6 @@
   <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
   <button onclick="apriSceltaAzione()" style="background-color: #28a745;">📅 Gestisci Lezione (Prenota/Disdici)</button>
 
- <!-- POPUP LOGIN -->
-  <div id="loginPopup" class="modal" style="display: flex;">
-    <div class="modal-box">
-      <h3>Inserisci password di login</h3>
-      <input id="loginPwInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter') _0xa1b2()">
-      <button onclick="_0xa1b2()">Accedi</button>
-    </div>
-  </div>
-
   <!-- POPUP SCELTA AZIONE -->
   <div id="sceltaAzionePopup" class="modal">
     <div class="modal-box">
@@ -775,8 +766,8 @@ function chiudiTutorial() {
       localStorage.setItem("lezioni_confermate", JSON.stringify(lezioniAggiornate));
 
       // Se sono state aggiunte crocette in automatico, aggiorna la schermata principale se la funzione esiste
-      if (crocetteAggiunte > 0 && typeof aggiornaInterfaccia === 'function') {
-        aggiornaInterfaccia();
+      if (crocetteAggiunte > 0) {
+        aggiornaBarra();
       }
 
       // Popola il popup con le sole lezioni future disdicibili (> 24h)
