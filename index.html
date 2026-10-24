@@ -226,6 +226,9 @@
     const l0g = "07ab59f4731b0790d0acfded6a52d2c53e7e3c6a1e241f6dfe3a41f3072e07fb";
     const d3l   = "99c07b61fbe08680fb027342e38de774b173c3f8b6a141fa287c6635e80daf28";
 
+    // Inizializzazione globale di totCrocette PRIMA di tutto per preservare il localStorage
+    let totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
+
     async function hashPassword(pw) {
       const encoder = new TextEncoder();
       const data = encoder.encode(pw);
@@ -254,8 +257,8 @@
         if (oraLezione < oraAttuale) {
           return;
         } else if (diffOre <= 24) {
-          let crocette = parseInt(localStorage.getItem("tot_crocette") || "0") + 1;
-          localStorage.setItem("tot_crocette", crocette.toString());
+          totCrocette = parseInt(localStorage.getItem("tot_crocette") || "0") + 1;
+          localStorage.setItem("tot_crocette", totCrocette.toString());
           const dataFormattata = new Date(l.dataOra).toLocaleDateString('it-IT');
           aggiungiStorico(`❌ Mancate 24h per la lezione del ${dataFormattata}: +1 crocetta automatica`);
           crocetteAggiunte++;
@@ -266,11 +269,8 @@
 
       localStorage.setItem("lezioni_confermate", JSON.stringify(lezioniAggiornate));
       
-      totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
-
-      if (crocetteAggiunte > 0) {
-        aggiornaBarra();
-      }
+      // Aggiorna la barra con i dati corretti dal localStorage
+      aggiornaBarra();
 
       const check = document.getElementById("privacyCheck");
       const btn = document.getElementById("privacyAcceptBtn");
@@ -297,8 +297,6 @@
         const tutPopup = document.getElementById("tutorialPopup");
         if(tutPopup) tutPopup.style.display = "flex";
       }
-      
-      aggiornaBarra();
     });
   
     async function _0xa1b2() {
@@ -416,8 +414,6 @@
       document.getElementById("storicoPopup").style.display = "flex";
     }
 
-    let totCrocette = parseInt(localStorage.getItem('tot_crocette')) || 0;
-
     function aggiornaBarra() {
       const textEl = document.getElementById('totCrocetteText');
       if(textEl) textEl.innerText = `Crocette totali: ${totCrocette}`;
@@ -496,6 +492,176 @@
       document.getElementById("sceltaAzionePopup").style.display = "flex";
     }
 
-    function chiudiPopupPrenotazione() {
+        function chiudiPopupPrenotazione() {
       document.getElementById("prenotaPopup").style.display = "none";
- 
+    }
+
+    function inviaPrenotazione() {
+      const nome = document.getElementById("nomeInput").value.trim();
+      const emailUtente = document.getElementById("emailInput").value.trim();
+      const date = document.getElementById("dateInput").value.trim();
+      if (!nome || !emailUtente || !date) {
+        alert("Per favore, compila tutti i campi.");
+        return;
+      }
+      window._prenotazioneTemp = { tipo: 'prenotazione', nome, emailUtente, date };
+      document.getElementById("privacyPopup").style.display = "flex";
+    }
+
+    function chiudiPrivacy() {
+      document.getElementById("privacyPopup").style.display = "none";
+    }
+
+    function accettaPrivacy() {
+      const privacyCheckbox = document.getElementById("privacyCheck");
+      const privacyBtn = document.getElementById("privacyAcceptBtn");
+
+      if (!privacyCheckbox.checked) {
+        alert("Devi accettare l'informativa per procedere.");
+        return;
+      }
+
+      const { tipo, nome, emailUtente, date } = window._prenotazioneTemp;
+      const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20=");
+
+      let oggetto = "Prenotazione Lezione - " + nome;
+      let corpo = `Nuova prenotazione:\n\nNome: ${nome}\nEmail: ${emailUtente}\nDate richieste: ${date}`;
+
+      const mailtoLink = `mailto:${_3m41}?subject=${encodeURIComponent(oggetto)}&body=${encodeURIComponent(corpo)}`;
+      window.location.href = mailtoLink;
+
+      document.getElementById("privacyPopup").style.display = "none";
+      chiudiPopupPrenotazione();
+
+      privacyCheckbox.checked = false;
+      privacyBtn.disabled = true;
+      privacyBtn.style.opacity = "0.5";
+
+      alert("Email composta con successo!");
+    }
+
+    function scegliAzione(azione) {
+      document.getElementById("sceltaAzionePopup").style.display = "none";
+      if (azione === 'prenota') {
+        document.getElementById("prenotaPopup").style.display = "flex";
+      } else if (azione === 'registra') {
+        document.getElementById("containerDateConfermate").innerHTML = 
+          '<input type="datetime-local" class="inputDataConfermata" style="width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px;">';
+        document.getElementById("registraLezioniPopup").style.display = "flex";
+      } else if (azione === 'disdici') {
+        apriGestioneLezioniFissate();
+      }
+    }
+
+    function chiudiRegistraLezioni() {
+      document.getElementById("registraLezioniPopup").style.display = "none";
+    }
+
+    function aggiungiCampoDataConfermata() {
+      const container = document.getElementById("containerDateConfermate");
+      const input = document.createElement("input");
+      input.type = "datetime-local";
+      input.className = "inputDataConfermata";
+      input.style.cssText = "width: 90%; padding: 8px; border-radius: 6px; border: 1px solid #aaa; font-size: 14px; margin-top: 5px;";
+      container.appendChild(input);
+    }
+
+    function salvaLezioniConfermate() {
+      const inputs = document.querySelectorAll(".inputDataConfermata");
+      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      let quanteAggiunte = 0;
+
+      inputs.forEach(input => {
+        if (input.value) {
+          lezioni.push({
+            id: Date.now() + Math.random(),
+            dataOra: input.value
+          });
+          quanteAggiunte++;
+        }
+      });
+
+      if (quanteAggiunte === 0) {
+        alert("Seleziona almeno una data e un orario.");
+        return;
+      }
+
+      localStorage.setItem("lezioni_confermate", JSON.stringify(lezioni));
+      aggiungiStorico(`📅 Registrata/e ${quanteAggiunte} lezione/i confermata/e`);
+      alert(`Salvate con successo ${quanteAggiunte} lezione/i confermata/e!`);
+      chiudiRegistraLezioni();
+    }
+
+    function apriGestioneLezioniFissate() {
+      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      const oraAttuale = new Date().getTime();
+      let lezioniAggiornate = [];
+      let crocetteAggiunte = 0;
+
+      lezioni.forEach(l => {
+        const oraLezione = new Date(l.dataOra).getTime();
+        const diffOre = (oraLezione - oraAttuale) / (1000 * 60 * 60);
+
+        if (oraLezione < oraAttuale) {
+          return;
+        } else if (diffOre <= 24) {
+          totCrocette = parseInt(localStorage.getItem("tot_crocette") || "0") + 1;
+          localStorage.setItem("tot_crocette", totCrocette.toString());
+          const dataFormattata = new Date(l.dataOra).toLocaleDateString('it-IT');
+          aggiungiStorico(`❌ Mancate 24h per la lezione del ${dataFormattata}: +1 crocetta automatica`);
+          crocetteAggiunte++;
+        } else {
+          lezioniAggiornate.push(l);
+        }
+      });
+
+      localStorage.setItem("lezioni_confermate", JSON.stringify(lezioniAggiornate));
+
+      if (crocetteAggiunte > 0) {
+        aggiornaBarra();
+      }
+
+      const listaEl = document.getElementById("listaLezioniFissate");
+
+      if (lezioniAggiornate.length === 0) {
+        listaEl.innerHTML = "<p>Nessuna lezione confermata attiva al momento.</p>";
+      } else {
+        listaEl.innerHTML = lezioniAggiornate.map((l) => {
+          const dataFormattata = new Date(l.dataOra).toLocaleString('it-IT', {
+            dateStyle: 'short',
+            timeStyle: 'short'
+          });
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:#f9f9f9; padding:8px; border-radius:6px;">
+              <span>🐴 ${dataFormattata}</span>
+              <button onclick="tentaDisdettaLezione('${l.id}')" style="background-color:#dc3545; font-size:12px; padding:6px 10px; margin:0;">Disdici</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      document.getElementById("gestioneLezioniPopup").style.display = "flex";
+    }
+
+    function tentaDisdettaLezione(id) {
+      let lezioni = JSON.parse(localStorage.getItem("lezioni_confermate") || "[]");
+      const lezione = lezioni.find(l => l.id == id);
+      if (!lezione) return;
+
+      if (confirm("Mancano più di 24 ore. Vuoi procedere con la disdetta di questa lezione?")) {
+        lezioni = lezioni.filter(l => l.id != id);
+        localStorage.setItem("lezioni_confermate", JSON.stringify(lezioni));
+        
+        aggiungiStorico(`❌ Disdetta lezione del ${new Date(lezione.dataOra).toLocaleDateString('it-IT')}`);
+        
+        const _3m41 = atob("bWlj" + "aGV" + "sYTMx" + "MEBnbW" + "FpbC" + "5jb20=");
+        const mailtoLink = `mailto:${_3m41}?subject=${encodeURIComponent("Disdetta Lezione - " + new Date(lezione.dataOra).toLocaleString('it-IT'))}&body=${encodeURIComponent("Desidero disdire la lezione fissata per il: " + new Date(lezione.dataOra).toLocaleString('it-IT'))}`;
+        window.location.href = mailtoLink;
+
+        apriGestioneLezioniFissate();
+      }
+    }
+  </script>
+</body>
+</html>
+     
