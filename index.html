@@ -108,7 +108,7 @@
 
   <button onclick="aggiungiCrocette()">➕ Aggiungi Crocette</button>
   <button onclick="apriPopupPassword()">🗑️ Elimina Crocette</button>
-  <button onclick="apriSceltaAzione()" style="background-color: #28a745;">📅 Gestisci Lezione (Prenota/Disdici)</button>
+  <button onclick="apriSceltaAzione()" style="background-color: #28a745;">📅 Gestisci le tue lezioni </button>
 
   <!-- POPUP PASSWORD ELIMINAZIONE CROCETTE -->
   <div id="pwPopup" class="modal">
@@ -358,10 +358,11 @@
       { emoji: "🐴", title: "Benvenuto in Equinia!", desc: "Questa app sostituisce la tua scheda abbonamento cartacea." },
       { emoji: "✅", title: "Le crocette", desc: "Ogni abbonamento è composto da 10 crocette." },
       { emoji: "➕", title: "Aggiungi crocette", desc: "Premi il pulsante Aggiungi Crocette." },
-      { emoji: "🗑️", title: "Elimina crocette", desc: "L'istruttrice può eliminarle con password." },
-      { emoji: "📋", title: "Storico", desc: "Controlla le operazioni." },
-      { emoji: "⚠️", title: "Scadenza", desc: "Avvisi automatici di scadenza." },
-      { emoji: "📲", title: "Installa l'app!", desc: "Installala sul telefono." }
+      { emoji: "📅", title: "Gestisci le tue lezioni", desc: "Proponi nuove date via email, registra le date confermate dall'istruttrice o gestisci/disdici i tuoi appuntamenti." },
+      { emoji: "⏰", title: "Regola delle 24 ore", desc: "Puoi disdire una lezione in autonomia solo se mancano più di 24 ore. Se disdici troppo tardi o salti, scatta una crocetta automatica!" },
+      { emoji: "🗑️", title: "Elimina crocette", desc: "Se serve correggere un errore, l'istruttrice può eliminare le crocette tramite password." },
+      { emoji: "📋", title: "Storico", desc: "Tocca lo storico per controllare tutte le operazioni effettuate." },
+      { emoji: "📲", title: "Installa l'app!", desc: "Per un'esperienza ottimale, installa l'app sul telefono tramite il link dedicato." }
     ];
 
     let tutorialStep = 0;
